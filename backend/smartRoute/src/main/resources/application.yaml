@@ -5,6 +5,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/smart_route
     username: smart_route
     password: senha
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
   jpa: 
     hibernate.ddl-auto: update
     show-sql: true

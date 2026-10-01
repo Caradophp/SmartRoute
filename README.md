@@ -3,7 +3,7 @@ Guia rápido para rodar o projeto e referência aos arquivos Markdown que explic
 1) Pré-requisitos
 - Git
 - Node.js (versão LTS) e npm ou yarn — se for projeto JavaScript/TypeScript
-- Python 3.8+ e pip — se for projeto Python
+- Java 21 ou Superior
 - Docker (opcional)
 Observação: instale apenas as ferramentas necessárias ao stack do projeto (ver arquivos de documentação abaixo).
 2) Clonar o repositório
