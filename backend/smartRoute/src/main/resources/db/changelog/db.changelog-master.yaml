@@ -3,6 +3,8 @@ databaseChangeLog:
       file: db/changelog/00-create-initial-tables.sql
   - include:
       file: db/changelog/01-create-another-tables.sql
+  - include:
+      file: db/changelog/02-add-primary-and-foreign-keys.sql
   - changeSet:
       id: 1
       author: nome
