@@ -8,38 +8,38 @@ Guia rápido para rodar o projeto e referência aos arquivos Markdown que explic
 Observação: instale apenas as ferramentas necessárias ao stack do projeto (ver arquivos de documentação abaixo).
 2) Clonar o repositório
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/Caradophp/SmartRoute.git
 cd SmartRoute
 ```
 3) Instalação das dependências
-- Se for Node.js:
+- Configuração do frontend:
 ```bash
+cd frontend/smartRoute
+
 npm install
 # ou
 yarn install
 ```
+- Configuração do Java:
+```bash
+cd backend/smartRoute
 
-5) Como rodar
+mvn clean install
+```
+
+4) Como rodar
 - Desenvolvimento (exemplos genéricos):
 ```bash
-# Para Node.js
+# Para frontend
 npm run dev
 
-# Para Python (ex.: Flask/FastAPI)
-uvicorn src.main:app --reload
+# Para backend
+mvn spring-boot:run
 
 # Usando Docker
 docker-compose up --build
-```
-6) Testes
-```bash
-# Node.js
-npm test
 
-# Python
-pytest
-```
-7) Documentação detalhada
+5) Documentação detalhada
 Consulte os outros arquivos Markdown do projeto para entender arquitetura, uso e detalhes de implementação:
 - ./backend/BANCO.md — Configuração do banco de dados
 - ./backend/BACKEND.md — Configuração do backend
@@ -47,7 +47,7 @@ Consulte os outros arquivos Markdown do projeto para entender arquitetura, uso e
 - ./mobile/MOBILE.md — Configuração do aplicativo mobile
 
 Se algum desses arquivos não existir, procure por arquivos .md na raiz ou na pasta docs para a documentação específica do projeto.
-8) Contatos
+6) Contatos
 Para dúvidas sobre execução, abra uma issue no repositório ou contate os mantenedores listados nos arquivos de documentação.
 
 Boa execução!
