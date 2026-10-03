@@ -20,3 +20,5 @@ config:
     port: 587
     username: email
     password: senha
+  jwt:
+    secret-key: 123456789
