@@ -1,4 +1,4 @@
-package com.faesa.smartRoute.dto.enums;
+package com.faesa.smartRoute.dto;
 
 public record LoginDto(
         String email,

@@ -31,7 +31,7 @@ public class LoginService {
         Map<String, String> result = new HashMap<>();
         UserDetails userDetails = userService.loadUserByUsername(email);
 
-        if (passwordEncoder.matches(senha, userDetails.getPassword())) {
+        if (!passwordEncoder.matches(senha, userDetails.getPassword())) {
             throw new BusinessException("Senha inválida");
         }
 

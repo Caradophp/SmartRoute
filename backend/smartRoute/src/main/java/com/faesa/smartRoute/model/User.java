@@ -38,6 +38,10 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

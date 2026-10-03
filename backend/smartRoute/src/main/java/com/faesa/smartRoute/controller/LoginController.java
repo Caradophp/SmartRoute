@@ -1,6 +1,6 @@
 package com.faesa.smartRoute.controller;
 
-import com.faesa.smartRoute.dto.enums.LoginDto;
+import com.faesa.smartRoute.dto.LoginDto;
 import com.faesa.smartRoute.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
