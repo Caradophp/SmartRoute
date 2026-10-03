@@ -1,7 +1,9 @@
 package com.faesa.smartRoute.controller;
 
+import com.faesa.smartRoute.dto.enums.LoginDto;
 import com.faesa.smartRoute.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,11 +20,16 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> params) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok().body(loginService.login(
-                params.get("email"),
-                params.get("senha")
+                loginDto.email(),
+                loginDto.senha()
         ));
     }
 
+    @PostMapping("/email")
+    public ResponseEntity<Void> sendEmail(@RequestBody Map<String, String> param) {
+        loginService.sendEmail(param.get("email"));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

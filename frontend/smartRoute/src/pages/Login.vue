@@ -7,6 +7,9 @@ import { ref } from 'vue';
 
 const showRecoveryPassForm = ref(false);
 
+const email = ref('');
+const senha = ref('');
+
 const recoveryPass = () => {
     showRecoveryPassForm.value = true;
 }
@@ -14,7 +17,10 @@ const recoveryPass = () => {
 const login = async (event: Event) => {
     event.preventDefault(); 
     try {
-        const response = await axios.post('http://localhost:8080/login');
+        const response = await axios.post('http://localhost:8080/login', {
+            email: email.value,
+            senha: senha.value
+        });
 
         if (response.status !== 200) {
             Toast.danger('Erro ao logar. Contate o suporte técnico');
@@ -23,7 +29,7 @@ const login = async (event: Event) => {
 
         Toast.info('Logado com sucesso. Redirecionando...')
     } catch (erro) {
-        Toast.danger((erro as Error).message)
+        Toast.error(erro)
     }
 }
 </script>
@@ -33,8 +39,8 @@ const login = async (event: Event) => {
         <img src="../assets/img/logo.png" alt="Logo" width="250px" height="250px"/>
         <section class="login-panel">
             <form>
-                <input type="text" placeholder="Usuário" />
-                <input type="password" placeholder="Senha" />
+                <input type="text" placeholder="Usuário" v-model="email" />
+                <input type="password" placeholder="Senha" v-model="senha" />
                 <fwb-button type="button" @click="login">Acessar</fwb-button>
                 <fwb-a href="#" @click="recoveryPass">Esqueceu sua senha?</fwb-a>
             </form>

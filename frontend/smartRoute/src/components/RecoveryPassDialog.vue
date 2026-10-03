@@ -1,7 +1,7 @@
 <script setup>
 import { FwbInput } from 'flowbite-vue';
 import Dialog from './Dialog.vue';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import Toast from '@/utils/Toast.js';
 import axios from 'axios';
 
@@ -16,21 +16,27 @@ const showNewPassForm = ref(false);
 const userEmail = ref('');
 const tipedCode = ref(0);
 
+const openLoader = inject("openLoader");
+const closeLoader = inject("closeLoader");
+
 const sendEmail = async () => {
+    openLoader();
     try {
         const response = await axios.post('http://localhost:8080/login/email', {
             email: userEmail.value
         });
 
-        if (!response.status !== 200) {
+        if (response.status !== 200) {
             Toast.error('Erro desconhecido. Contate o suporte técnico')
             return;
         }
 
         Toast.success('E-mail enviado com sucesso. Verifique sua caixa de entrada')
         showEmailInput.value = false;
+        closeLoader();
     } catch (error) {
-        Toast.danger(error.message)
+        Toast.error(error)
+        closeLoader();
     }
 }
 
