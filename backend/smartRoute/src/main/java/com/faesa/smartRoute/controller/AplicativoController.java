@@ -1,13 +1,12 @@
 package com.faesa.smartRoute.controller;
 
 import com.faesa.smartRoute.dto.AppUserDto;
+import com.faesa.smartRoute.dto.ChangePassDto;
 import com.faesa.smartRoute.service.Aplicativo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/aplicativo")
@@ -22,4 +21,9 @@ public class AplicativoController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping
+    public ResponseEntity<Void> trocarSenha(@RequestBody ChangePassDto changePassDto) {
+        aplicativo.trocarSenha(changePassDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

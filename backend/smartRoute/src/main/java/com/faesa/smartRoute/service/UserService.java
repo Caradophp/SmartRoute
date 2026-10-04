@@ -1,6 +1,7 @@
 package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.AppUserDto;
+import com.faesa.smartRoute.dto.ChangePassDto;
 import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.AppUser;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -34,6 +36,11 @@ public class UserService implements UserDetailsService, Aplicativo {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(RecordNotFoundException::new);
     }
 
     @Override
@@ -61,5 +68,27 @@ public class UserService implements UserDetailsService, Aplicativo {
         appUser.setSenha(encrypter.encriptar(appUserDto.senha()));
         appUser.setRole(roleRepository.findDefaultRole());
         appUserRepository.save(appUser);
+    }
+
+    @Override
+    @Transactional
+    public void trocarSenha(ChangePassDto changePassDto) {
+        String email = changePassDto.email();
+        String senha = changePassDto.senha();
+        String confirmarSenha = changePassDto.confirmarSenha();
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isEmpty()) {
+            throw new RecordNotFoundException("E-mail não encontrado");
+        }
+
+        if (!senha.equals(confirmarSenha)) {
+            throw new BusinessException("As senha informadas não conferem");
+        }
+
+        User user = userOptional.get();
+        user.setSenha(encrypter.encriptar(senha));
+        userRepository.save(user);
     }
 }

@@ -32,4 +32,10 @@ public class LoginController {
         loginService.sendEmail(param.get("email"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/code")
+    public ResponseEntity<Void> checkCode(@RequestBody Map<String, String> param) {
+        loginService.checkCode(param.get("codigo"), param.get("email"));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

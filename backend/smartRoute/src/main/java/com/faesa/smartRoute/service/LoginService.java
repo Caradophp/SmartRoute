@@ -2,15 +2,16 @@ package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
+import com.faesa.smartRoute.model.Code;
+import com.faesa.smartRoute.repository.CodeRepository;
 import com.faesa.smartRoute.util.Encrypter;
 import com.faesa.smartRoute.util.Jwt;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,13 +25,13 @@ public class LoginService {
     private EmailService emailService;
 
     @Autowired
+    private CodeRepository codeRepository;
+
+    @Autowired
     private Encrypter encrypter;
 
     @Autowired
     private Jwt jwt;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     public Map<String, String> login(String email, String senha) {
         Map<String, String> result = new HashMap<>();
@@ -66,9 +67,21 @@ public class LoginService {
 
         try {
             emailService.sendEmail(subject, body, email);
+            Code code1 = new Code(code, userService.findByEmail(email));
+            codeRepository.save(code1);
         } catch (MessagingException e) {
             throw new RuntimeException("Erro ao enviar e-mail de recuperação de senha. Contate o suporte técnico");
         }
     }
 
+    public void checkCode(String codigo, String email) {
+        Code code = codeRepository.findByCodeSendedAndUserEmailAndCreatedAtBetween(
+                        Integer.parseInt(codigo),
+                        email,
+                        codeRepository.findAll().getFirst().getCreatedAt(),
+                        LocalDateTime.now().plusHours(1))
+                .orElseThrow(() -> new BusinessException("Código informado é inválido"));
+
+        codeRepository.delete(code);
+    }
 }
