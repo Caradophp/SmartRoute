@@ -1,0 +1,14 @@
+ALTER TABLE role DROP COLUMN IF EXISTS id;
+ALTER TABLE role RENAME COLUMN role_id TO id;
+ALTER TABLE app_user DROP COLUMN IF EXISTS id;
+ALTER TABLE app_user RENAME COLUMN user_id TO id;
+ALTER TABLE territorio RENAME COLUMN id_territorio TO id;
+ALTER TABLE address RENAME COLUMN id_address TO id;
+ALTER TABLE assisted_person RENAME COLUMN id_aperson TO id;
+ALTER TABLE vulnerability_type RENAME COLUMN id_vulnerability TO id;
+ALTER TABLE health_unit RENAME COLUMN id_unit TO id;
+ALTER TABLE health_service RENAME COLUMN id_service TO id;
+ALTER TABLE ambulance RENAME COLUMN id_ambulance TO id;
+ALTER TABLE health_agent RENAME COLUMN id_agent TO id;
+ALTER TABLE route_plan RENAME COLUMN id_route TO id;
+ALTER TABLE field_visit RENAME COLUMN id_field TO id;
