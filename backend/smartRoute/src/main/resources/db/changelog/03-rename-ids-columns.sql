@@ -12,3 +12,8 @@ ALTER TABLE ambulance RENAME COLUMN id_ambulance TO id;
 ALTER TABLE health_agent RENAME COLUMN id_agent TO id;
 ALTER TABLE route_plan RENAME COLUMN id_route TO id;
 ALTER TABLE field_visit RENAME COLUMN id_field TO id;
+ALTER TABLE app_user 
+DROP IF EXISTS nome, 
+DROP IF EXISTS email, 
+DROP IF EXISTS status,
+DROP IF EXISTS role_id;
