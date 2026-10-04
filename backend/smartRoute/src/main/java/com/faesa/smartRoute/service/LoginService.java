@@ -2,9 +2,11 @@ package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
+import com.faesa.smartRoute.util.Encrypter;
 import com.faesa.smartRoute.util.Jwt;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,16 +24,19 @@ public class LoginService {
     private EmailService emailService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private Encrypter encrypter;
 
     @Autowired
     private Jwt jwt;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public Map<String, String> login(String email, String senha) {
         Map<String, String> result = new HashMap<>();
         UserDetails userDetails = userService.loadUserByUsername(email);
 
-        if (!passwordEncoder.matches(senha, userDetails.getPassword())) {
+        if (!encrypter.verificar(senha, userDetails.getPassword())) {
             throw new BusinessException("Senha inválida");
         }
 
@@ -56,7 +61,7 @@ public class LoginService {
                 
                 Código: %s
                 
-                Esse é um e-mail automático. Por favor não responda
+                Esse é um e-mail automático. Por favor não responda.
                 """.formatted(code);
 
         try {

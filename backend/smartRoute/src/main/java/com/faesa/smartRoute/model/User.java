@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +31,7 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
     @Column(length = 50)
     private String email;
 
-    @Column(length = 64)
+    @Column(length = 100)
     private String senha;
 
     @Column(length = 11)
@@ -56,4 +58,5 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
     public String getUsername() {
         return senha;
     }
+
 }

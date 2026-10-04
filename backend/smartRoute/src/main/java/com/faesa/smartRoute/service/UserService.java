@@ -8,8 +8,7 @@ import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.repository.AppUserRepository;
 import com.faesa.smartRoute.repository.RoleRepository;
 import com.faesa.smartRoute.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.faesa.smartRoute.util.Encrypter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,9 +20,6 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService, Aplicativo {
 
-    @PersistenceContext
-    EntityManager em;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -32,6 +28,9 @@ public class UserService implements UserDetailsService, Aplicativo {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private Encrypter encrypter;
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
@@ -59,7 +58,7 @@ public class UserService implements UserDetailsService, Aplicativo {
         appUser.setEmail(appUserDto.email());
         appUser.setCpf(appUserDto.cpf());
         appUser.setTelefone(appUserDto.telefone());
-        appUser.setSenha(appUserDto.senha());
+        appUser.setSenha(encrypter.encriptar(appUserDto.senha()));
         appUser.setRole(roleRepository.findDefaultRole());
         appUserRepository.save(appUser);
     }
