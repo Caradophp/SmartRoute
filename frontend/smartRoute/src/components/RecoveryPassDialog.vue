@@ -15,6 +15,8 @@ const showNewPassForm = ref(false);
 
 const userEmail = ref('');
 const tipedCode = ref(0);
+const newPass = ref('');
+const confirmPass = ref('');
 
 const openLoader = inject("openLoader");
 const closeLoader = inject("closeLoader");
@@ -42,14 +44,17 @@ const sendEmail = async () => {
 
 const checkCode = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/login/check?code=${tipedCode.value}`,);
+        const response = await axios.post(`http://localhost:8080/login/check`, {
+            codigo: tipedCode.value,
+            email: userEmail.value
+        });
 
-        if (!response.status !== 200) {
+        if (response.status !== 200) {
             Toast.error('Erro desconhecido. Contate o suporte técnico')
             return;
         }
 
-        Toast.success('E-mail enviado com sucesso. Verifique sua caixa de entrada')
+        Toast.success('Código válidado com sucesso. Digite sua nova abaixo')
         showNewPassForm.value = true;
     } catch (error) {
         Toast.danger(error.message)
@@ -59,11 +64,12 @@ const checkCode = async () => {
 const changePass = async () => {
     try {
         const response = await axios.patch('http://localhost:8080/login/changePass', {
-            newPass: pass,
-            confirmPass: confirmPass
+            email: userEmail.value,
+            senha: newPass.value,
+            confirmar_senha: confirmPass.value
         });
 
-        if (!response.status !== 200) {
+        if (response.status !== 200) {
             Toast.error('Erro desconhecido. Contate o suporte técnico');
             return;
         }
@@ -78,9 +84,9 @@ const changePass = async () => {
 }
 
 const buttonHandler = () => {
-    if (showEmailInput) {
+    if (showEmailInput.value) {
         sendEmail();
-    } else if (!showEmailInput && !showNewPassForm) {
+    } else if (!showEmailInput.value && !showNewPassForm.value) {
         checkCode();
     } else {
         changePass();
@@ -97,12 +103,12 @@ const buttonHandler = () => {
         </form>
         <form v-if="!showEmailInput && !showNewPassForm">
             <span>Informe o código de verificação envia para seu e-mail</span><br><br>
-            <FwbInput autocomplete="off" placeholder="Código" />
+            <FwbInput autocomplete="off" placeholder="Código" v-model="tipedCode"/>
         </form>
         <form v-if="showNewPassForm">
             <span>Informe a nova senha abaixo</span><br><br>
-            <FwbInput autocomplete="off" placeholder="Senha" /><br>
-            <FwbInput autocomplete="off" placeholder="Confirmar Senha" />
+            <FwbInput autocomplete="off" placeholder="Senha" v-model="newPass" /><br>
+            <FwbInput autocomplete="off" placeholder="Confirmar Senha" v-model="confirmPass" />
         </form>
     </Dialog>
 </template>

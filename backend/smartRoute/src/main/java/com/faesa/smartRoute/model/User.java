@@ -51,12 +51,12 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
 
     @Override
     public @Nullable String getPassword() {
-        return email;
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return senha;
+        return email;
     }
 
 }

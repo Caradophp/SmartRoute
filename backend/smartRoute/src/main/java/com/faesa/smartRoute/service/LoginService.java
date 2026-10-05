@@ -1,8 +1,10 @@
 package com.faesa.smartRoute.service;
 
+import com.faesa.smartRoute.dto.ChangePassDto;
 import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Code;
+import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.repository.CodeRepository;
 import com.faesa.smartRoute.util.Encrypter;
 import com.faesa.smartRoute.util.Jwt;
@@ -10,6 +12,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -74,14 +77,34 @@ public class LoginService {
         }
     }
 
-    public void checkCode(String codigo, String email) {
+    public void checkCode(Integer codigo, String email) {
         Code code = codeRepository.findByCodeSendedAndUserEmailAndCreatedAtBetween(
-                        Integer.parseInt(codigo),
+                        codigo,
                         email,
                         codeRepository.findAll().getFirst().getCreatedAt(),
                         LocalDateTime.now().plusHours(1))
                 .orElseThrow(() -> new BusinessException("Código informado é inválido"));
 
         codeRepository.delete(code);
+    }
+
+    @Transactional
+    public void changePass(ChangePassDto changePassDto) {
+        String email = changePassDto.email();
+        String senha = changePassDto.senha();
+        String confirmarSenha = changePassDto.confirmarSenha();
+
+        User user = userService.findByEmail(email);
+
+        if (user == null) {
+            throw new RecordNotFoundException("E-mail não encontrado");
+        }
+
+        if (!senha.equals(confirmarSenha)) {
+            throw new BusinessException("As senha informadas não conferem");
+        }
+
+        user.setSenha(encrypter.encriptar(senha));
+        userService.save(user);
     }
 }
