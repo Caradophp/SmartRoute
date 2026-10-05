@@ -1,14 +1,13 @@
 package com.faesa.smartRoute.controller;
 
+import com.faesa.smartRoute.dto.ChangePassDto;
+import com.faesa.smartRoute.dto.CodeToCheckDto;
 import com.faesa.smartRoute.dto.LoginDto;
 import com.faesa.smartRoute.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -33,9 +32,15 @@ public class LoginController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/code")
-    public ResponseEntity<Void> checkCode(@RequestBody Map<String, String> param) {
-        loginService.checkCode(param.get("codigo"), param.get("email"));
+    @PostMapping("/check")
+    public ResponseEntity<Void> checkCode(@RequestBody CodeToCheckDto param) {
+        loginService.checkCode(param.codigo(), param.email());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/changePass")
+    public ResponseEntity<Void> changePass(@RequestBody ChangePassDto changePassDto) {
+        loginService.changePass(changePassDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

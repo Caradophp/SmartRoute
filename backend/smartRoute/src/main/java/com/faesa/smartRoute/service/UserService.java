@@ -91,4 +91,8 @@ public class UserService implements UserDetailsService, Aplicativo {
         user.setSenha(encrypter.encriptar(senha));
         userRepository.save(user);
     }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
 }
