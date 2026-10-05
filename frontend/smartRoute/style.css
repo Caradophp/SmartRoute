@@ -1,0 +1,25 @@
+/* import Flowbite Vue styles */
+@import "flowbite-vue/index.css";
+
+/* import Flowbite plugin */
+@plugin "flowbite/plugin";
+
+.header {
+    color: white;
+}
+
+.exc {
+    background-color: red;
+}
+
+.con {
+    background-color: cyan;
+}
+
+.inc {
+    background-color: green;
+}
+
+.alt {
+    background-color: yellow;
+}
