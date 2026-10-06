@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRoute - Recuperar Senha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-blue-600">SmartRoute</h1>
+            <p class="text-gray-500">Recupere o acesso à sua conta</p>
+        </div>
+
+        <div id="step1" class="space-y-4">
+            <label class="block text-sm font-medium text-gray-700">Digite seu e-mail cadastrado</label>
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <input type="email" id="recoveryEmail" class="pl-10 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="email@exemplo.com">
+            </div>
+            <button onclick="sendCode()" class="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition">
+                Enviar Código de Verificação
+            </button>
+        </div>
+
+        <div id="step2" class="hidden space-y-4">
+            <label class="block text-sm font-medium text-gray-700">Digite o código enviado por e-mail</label>
+            <input type="text" id="recoveryCode" class="w-full p-2 border border-gray-300 rounded-md text-center text-2xl tracking-widest" placeholder="000000">
+
+            <div class="grid grid-cols-1 gap-4 mt-4">
+                <input type="password" id="newPass" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Nova Senha">
+                <input type="password" id="confirmPass" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Confirmar Nova Senha">
+            </div>
+
+            <button onclick="resetPassword()" class="w-full bg-green-600 text-white p-2 rounded-md font-semibold hover:bg-green-700 transition">
+                Redefinir Senha
+            </button>
+        </div>
+
+        <p class="text-center text-sm text-gray-600 mt-6">
+            Lembrou a senha? <a href="index.html" class="text-blue-600 hover:underline">Voltar ao Login</a>
+        </p>
+    </div>
+
+    <script>
+        async function sendCode() {
+            const email = document.getElementById('recoveryEmail').value;
+            if(!email) return alert("Insira o e-mail");
+
+            try {
+                await fetch('http://localhost:8080/login/email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                alert('Código enviado para seu e-mail!');
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
+            } catch (e) { alert("Erro ao enviar código"); }
+        }
+
+        async function resetPassword() {
+            const email = document.getElementById('recoveryEmail').value;
+            const code = document.getElementById('recoveryCode').value;
+            const pass = document.getElementById('newPass').value;
+            const confirm = document.getElementById('confirmPass').value;
+
+            if(pass !== confirm) return alert("As senhas não coincidem");
+
+            try {
+                // Primeiro checa o código
+                const checkRes = await fetch('http://localhost:8080/login/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo: code, email: email })
+                });
+
+                if(checkRes.ok) {
+                    // Depois altera a senha
+                    await fetch('http://localhost:8080/login/changePass', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, senha: pass, confirmarSenha: confirm })
+                    });
+                    alert('Senha alterada com sucesso!');
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Código inválido!');
+                }
+            } catch (e) { alert("Erro ao redefinir senha"); }
+        }
+    </script>
+</body>
+</html>

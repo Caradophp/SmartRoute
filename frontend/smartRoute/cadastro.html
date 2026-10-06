@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRoute - Cadastro de Usuário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-blue-600">SmartRoute</h1>
+            <p class="text-gray-500">Crie sua conta para começar</p>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input type="text" id="nome" name="nome" required
+                        class="pl-10 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Seu nome completo">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="email@exemplo.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Confirmar E-mail</label>
+                    <input type="email" id="confirmarEmail" name="confirmarEmail" required
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Confirme seu e-mail">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Senha</label>
+                    <input type="password" id="senha" name="senha" required
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="******">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" required
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="******">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">CPF</label>
+                    <input type="number" id="cpf" name="cpf" required
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Apenas números">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Telefone</label>
+                    <input type="text" id="telefone" name="telefone" required
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="(00) 00000-0000">
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition duration-200 mt-6">
+                Cadastrar Conta
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-600 mt-6">
+            Já tem uma conta? <a href="index.html" class="text-blue-600 hover:underline">Faça Login</a>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                confirmar_email: document.getElementById('confirmarEmail').value,
+                senha: document.getElementById('senha').value,
+                confirmar_senha: document.getElementById('confirmarSenha').value,
+                cpf: parseInt(document.getElementById('cpf').value),
+                telefone: document.getElementById('telefone').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/users/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                    window.location.href = 'index.html';
+                } else {
+                    const errorData = await response.json();
+                    alert('Erro ao cadastrar: ' + (errorData.message || 'Verifique os dados informados'));
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
+            }
+        });
+    </script>
+</body>
+</html>
