@@ -7,7 +7,6 @@ public record UserResponseDto(
         String nome,
         String email,
         long cpf,
-        String telefone,
         String perfil
 ) {
 }

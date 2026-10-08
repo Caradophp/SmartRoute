@@ -3,6 +3,7 @@ package com.faesa.smartRoute.controller;
 import com.faesa.smartRoute.dto.AppUserDto;
 import com.faesa.smartRoute.dto.UserResponseDto;
 import com.faesa.smartRoute.model.AppUser;
+import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponseDto>> listAllUsers() {
-        return ResponseEntity.ok(userService.listAll().stream()
+        return ResponseEntity.ok(userService.findAll().stream()
                 .map(this::convertToDto)
                 .toList());
     }
@@ -53,13 +54,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    private UserResponseDto convertToDto(AppUser user) {
+    private UserResponseDto convertToDto(User user) {
         return new UserResponseDto(
                 user.getId(),
                 user.getNome(),
                 user.getEmail(),
                 user.getCpf(),
-                user.getTelefone(),
+
                 user.getRole() != null ? user.getRole().getNomePerfil() : null
         );
     }
