@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 @Table(name = "users")
@@ -46,7 +47,8 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (this.role == null) return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.getNomePerfil()));
     }
 
     @Override
