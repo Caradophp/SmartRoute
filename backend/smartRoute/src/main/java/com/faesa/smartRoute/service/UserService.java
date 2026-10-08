@@ -95,4 +95,35 @@ public class UserService implements UserDetailsService, Aplicativo {
     public void save(User user) {
         userRepository.save(user);
     }
+
+    public java.util.List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User findById(java.util.UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("Usuário não encontrado com o ID: " + id));
+    }
+
+    @Transactional
+    public User update(java.util.UUID id, User userDetails) {
+        User user = findById(id);
+
+        user.setNome(userDetails.getNome());
+        user.setEmail(userDetails.getEmail());
+
+        if (userDetails.getSenha() != null && !userDetails.getSenha().isEmpty()) {
+            user.setSenha(encrypter.encriptar(userDetails.getSenha()));
+        }
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void delete(java.util.UUID id) {
+        if (!userRepository.existsById(id)) {
+            throw new RecordNotFoundException("Usuário não encontrado para exclusão");
+        }
+        userRepository.deleteById(id);
+    }
 }
