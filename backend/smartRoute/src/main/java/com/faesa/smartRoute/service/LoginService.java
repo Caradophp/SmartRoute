@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,14 +58,15 @@ public class LoginService {
             throw new RecordNotFoundException("E-mail informado não está cadastrado no sistema");
         }
 
+        SecureRandom secureRandom = new SecureRandom();
+        int code = 100000 + secureRandom.nextInt(900000);
         String subject = "Recuperação de senha";
-        int code = (int) (Math.random() * 100000 + 1);
         String body = """
                 Prezado usuário, segue abaixo o código para recuperação de senha
                 do sistema. Caso não tenha sido você que solicitou, por favor ignore esse e-mail.
-                
+
                 Código: %s
-                
+
                 Esse é um e-mail automático. Por favor não responda.
                 """.formatted(code);
 
@@ -81,9 +83,9 @@ public class LoginService {
         Code code = codeRepository.findByCodeSendedAndUserEmailAndCreatedAtBetween(
                         codigo,
                         email,
-                        codeRepository.findAll().getFirst().getCreatedAt(),
-                        LocalDateTime.now().plusHours(1))
-                .orElseThrow(() -> new BusinessException("Código informado é inválido"));
+                        LocalDateTime.now().minusHours(1),
+                        LocalDateTime.now().plusMinutes(1))
+                .orElseThrow(() -> new BusinessException("Código informado é inválido ou expirado"));
 
         codeRepository.delete(code);
     }
