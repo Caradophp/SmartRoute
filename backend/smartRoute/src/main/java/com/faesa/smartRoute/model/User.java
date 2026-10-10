@@ -18,7 +18,7 @@ import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(name = "unique_email", columnNames = {"email"}), @UniqueConstraint(name = "unique_cpf", columnNames = {"cpf"})})
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
