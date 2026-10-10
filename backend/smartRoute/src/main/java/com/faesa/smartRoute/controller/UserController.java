@@ -1,6 +1,7 @@
 package com.faesa.smartRoute.controller;
 
 import com.faesa.smartRoute.dto.AppUserDto;
+import com.faesa.smartRoute.dto.UserRequestDto;
 import com.faesa.smartRoute.dto.UserResponseDto;
 import com.faesa.smartRoute.model.AppUser;
 import com.faesa.smartRoute.model.User;
@@ -21,13 +22,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody AppUserDto appUserDto) {
-        userService.cadastrarUsuario(appUserDto);
+    @PostMapping("/create")
+    public ResponseEntity<Void> register(@RequestBody UserRequestDto userRequestDto) {
+        userService.cadastrarUsuario(userRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponseDto>> listAllUsers() {
         return ResponseEntity.ok(userService.findAll().stream()
@@ -41,17 +42,26 @@ public class UserController {
         return ResponseEntity.ok(convertToDto(userService.findById(id)));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/alter/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable UUID id, @RequestBody AppUser user) {
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable UUID id, @RequestBody UserRequestDto user) {
         return ResponseEntity.ok(convertToDto(userService.update(id, user)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/search/{param}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponseDto> search(@PathVariable String param) {
+        return userService.search(param)
+                .stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
     private UserResponseDto convertToDto(User user) {
