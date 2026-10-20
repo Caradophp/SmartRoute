@@ -30,7 +30,7 @@ const login = async (event: Event) => {
         const data = await response.data;
         localStorage.setItem("token", data.token);
         Toast.info('Logado com sucesso. Redirecionando...')
-        location.href = '/home';
+        location.href = '/usuarios';
     } catch (erro) {
         Toast.error(erro)
     }
