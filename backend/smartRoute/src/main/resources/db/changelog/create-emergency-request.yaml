@@ -1,0 +1,22 @@
+- changeSet:
+    id: emergency-request-fks
+    author: eloisa
+    changes:
+
+      - addForeignKeyConstraint:
+          baseTableName: emergency_request
+          baseColumnNames: person_id
+          referencedTableName: assisted_person
+          referencedColumnNames: id_aPerson
+
+      - addForeignKeyConstraint:
+          baseTableName: emergency_request
+          baseColumnNames: ambulance_id
+          referencedTableName: ambulance
+          referencedColumnNames: id_ambulance
+
+      - addForeignKeyConstraint:
+          baseTableName: emergency_request
+          baseColumnNames: health_unit_id
+          referencedTableName: health_unit
+          referencedColumnNames: id_unit

@@ -2,9 +2,9 @@ spring:
   application:
     name: smartRoute
   datasource:
-    url: jdbc:postgresql://localhost:5432/smart_route
-    username: smart_route
-    password: senha
+    url: ${DATABASE_URL}
+    username: ${USERNAME}
+    password: ${PASSWORD}
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
   jpa: 
@@ -18,5 +18,7 @@ config:
   email:
     host: smtp.gmail.com
     port: 587
-    username: email
-    password: senha
+    username: ${USERNAME_EMAIL}
+    password: ${PASSWORD_EMAIL}
+  jwt:
+    secret-key: ${SECRECT_KEY}
