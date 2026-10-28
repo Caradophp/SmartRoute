@@ -1,0 +1,2 @@
+ALTER TABLE IF NOT EXISTS ambulance
+ADD CONSTRAINT unique_placa UNIQUE (placa);
