@@ -2,6 +2,7 @@ package com.faesa.smartRoute.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import java.util.HashMap;
@@ -9,6 +10,13 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionHandler {
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> methodArgumentNotValidHandler(MethodArgumentNotValidException exception) {
+        Map<String, String> params = new HashMap<>();
+        params.put("erro", exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(params);
+    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<Map<String, String>> recordNotFoundHandler(RecordNotFoundException exception) {
