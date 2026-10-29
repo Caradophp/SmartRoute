@@ -22,7 +22,7 @@ import static jakarta.persistence.EnumType.STRING;
 public class Ambulance extends com.faesa.smartRoute.model.Entity {
 
     @Column(name = "placa", nullable = false)
-    private String palca;
+    private String placa;
 
     @Column(name = "status", nullable = false)
     @Enumerated(STRING)
