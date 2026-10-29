@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CPFValidatorProcessor.class)
 public @interface CPF {
 
-    String message() default "Dado já cadastrado";
+    String message() default "CPF inválido";
 
     Class<?>[] groups() default {};
 
