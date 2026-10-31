@@ -6,6 +6,7 @@ import com.faesa.smartRoute.dto.UserResponseDto;
 import com.faesa.smartRoute.model.AppUser;
 import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> register(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<Void> register(@RequestBody @Valid UserRequestDto userRequestDto) {
         userService.cadastrarUsuario(userRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
