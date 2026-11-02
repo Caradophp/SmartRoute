@@ -27,6 +27,10 @@ const props = defineProps({
     setFormData: {
         type: Function,
         required: true
+    },
+    extraButtons: {
+        type: Array,
+        required: false
     }
 })
 
@@ -160,7 +164,7 @@ onMounted(() => {
     <main class="main-page">
         <HeaderPanel :novo-click="showInc" :pesquisa-click="search" v-model:inputSearch="searchParam"/>
         <DataTable :url="props.url" :columns="props.columns" :on-edit="showAlt" :on-delete="showExc" ref="grid"/>
-        <Dialog v-if="showDialog" @close="closeForm" @submit="eventhandler" @oper="'alt'" >
+        <Dialog v-if="showDialog" @close="closeForm" @submit="eventhandler" @oper="'alt'" :buttons="oper === 'alt' ? props.extraButtons : []">
             <form>
                 <div v-for="formField in props.formFields">
                     <div class="input-content">

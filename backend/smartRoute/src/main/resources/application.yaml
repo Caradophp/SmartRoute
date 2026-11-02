@@ -14,6 +14,12 @@ spring:
       hibernate: 
         format_sql: true
 
+springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+
 config:
   email:
     host: smtp.gmail.com
@@ -22,3 +28,7 @@ config:
     password: ${PASSWORD_EMAIL}
   jwt:
     secret-key: ${SECRECT_KEY}
+  link:
+    algorithm: ${ALGORITHM}
+    secret-key: ${SECRET_KEY}
+    base-url: ${BASE_URL}
