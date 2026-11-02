@@ -30,7 +30,7 @@ export default class Toast {
         } else if (data.aviso) {
             this.warning(data.aviso)
         } else {
-            toast(data.error, {'type': 'error'})   
+            toast(data.erro, {'type': 'error'})   
         }
     }
 }

@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static com.faesa.smartRoute.model.enums.UserStatus.ACTIVE;
+
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(name = "unique_email", columnNames = {"email"}), @UniqueConstraint(name = "unique_cpf", columnNames = {"cpf"})})
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -37,6 +39,9 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
 
     @Column(length = 11)
     private long cpf;
+
+    @Column(name = "attempt_login_number")
+    private Number attemptLoginNumber;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
@@ -59,6 +64,12 @@ public class User extends com.faesa.smartRoute.model.Entity implements UserDetai
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @PrePersist
+    public void setDefaultValues() {
+        this.status = ACTIVE;
+        this.attemptLoginNumber = 0;
     }
 
 }

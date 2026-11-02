@@ -1,21 +1,26 @@
-<script setup lang="ts">
+<script setup>
 import RecoveryPassDialog from '@/components/RecoveryPassDialog.vue';
 import Toast from '@/utils/Toast';
 import axios from 'axios';
 import { FwbA, FwbButton } from 'flowbite-vue';
-import { ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 
 const showRecoveryPassForm = ref(false);
 
 const email = ref('');
 const senha = ref('');
+const userId = ref();
+
+const openLoader = inject("openLoader");
+const closeLoader = inject("closeLoader");
 
 const recoveryPass = () => {
     showRecoveryPassForm.value = true;
 }
 
-const login = async (event: Event) => {
-    event.preventDefault(); 
+const login = async (event) => {
+    event.preventDefault();
+    openLoader();
     try {
         const response = await axios.post('http://localhost:8080/login', {
             email: email.value,
@@ -33,8 +38,40 @@ const login = async (event: Event) => {
         location.href = '/home';
     } catch (erro) {
         Toast.error(erro)
+        closeLoader();
     }
 }
+
+const closeModal = () => {
+    if (userId.value != null) {
+        localStorage.removeItem("token")
+        location.href = '/';
+    } else {
+        showRecoveryPassForm.value = false
+    }
+}
+
+onMounted(async () => {
+    const urlParams = new URLSearchParams(location.search);
+
+    if (urlParams.get("user") !== null) {
+
+        try {
+            const response = await axios.get(`http://localhost:8080/login/is-valid?user=${urlParams.get("user")}&expires=${urlParams.get("expires")}&sig=${urlParams.get("sig")}`)
+
+            if (response.status !== 200) {
+                Toast.danger("Erro ao validar link. Entre em contato com o suporte técnico.")
+                return;
+            }
+
+            userId.value = urlParams.get("user");
+            showRecoveryPassForm.value = true;
+        } catch (error) {
+            Toast.error(error)
+        }
+    }
+
+});
 </script>
 
 <template>
@@ -48,7 +85,7 @@ const login = async (event: Event) => {
                 <fwb-a href="#" @click="recoveryPass">Esqueceu sua senha?</fwb-a>
             </form>
         </section>
-        <recovery-pass-dialog :show="showRecoveryPassForm" :close="() => showRecoveryPassForm = false"/>
+        <recovery-pass-dialog :show="showRecoveryPassForm" :close="() => closeModal()" :user-id="userId"/>
     </div>   
 </template>
 
