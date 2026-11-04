@@ -32,6 +32,10 @@ public class Ambulance extends com.faesa.smartRoute.model.Entity {
     @JoinColumn(name = "driver_id", foreignKey = @ForeignKey(name = "fk_ambulance_driver"))
     private Driver driver;
 
+    @ManyToOne
+    @JoinColumn(name = "agent_id", nullable = false)
+    private HealthAgent healthAgent;
+
     @PrePersist
     private void setDefaultValues() {
         if (Objects.isNull(status)) {
