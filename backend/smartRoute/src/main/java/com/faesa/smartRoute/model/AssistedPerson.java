@@ -26,7 +26,7 @@ public class AssistedPerson extends com.faesa.smartRoute.model.Entity {
     @Column(name = "telefone", nullable = false, length = 11)
     private String telefone;
 
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "adress_id", nullable = false)
     private Adress adress;
 
