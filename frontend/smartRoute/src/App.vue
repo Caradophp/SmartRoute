@@ -16,6 +16,7 @@ const showLoader = ref(false);
 const openLoader = () => showLoader.value = true;
 const closeLoader = () => showLoader.value = false;
 const showEmergencyModal = ref(false);
+const showQuestion = ref(true);
 const emergencia = ref(null)
 
 provide("openLoader", openLoader)
@@ -61,9 +62,39 @@ onMounted(() => {
   client.activate();
 });
 
+const checkIsNecessary = async () => {
+  try {
+
+    const response = await apiClient.get(`http://localhost:8080/emergencias/is-necessary?id=${emergencia.value.userId}&longitude=${emergencia.value.longitude}&latitude=${emergencia.value.latitude}`);
+
+    if ((response.status == 200) == false) {
+      Toast.danger("Erro desconhecido. Contate o suporte técnico");
+      return;
+    }
+
+    const data = await response.data;
+
+    if (data.lenght == 0) {
+      await sendAbulance();
+    } else {
+      showQuestion.value = true;
+    }
+
+  } catch (error) {
+    Toast.error(error);
+  }
+}
+
 const sendAbulance = async () => {
   try {
-    const response = await apiClient.post();
+    const response = await apiClient.post(`http://localhost:8080/emergencias/ambulance`, {
+      id: emergencia.value.id,
+      latitude: emergencia.value.latitude,
+      longitude: emergencia.value.longitude,
+      username: emergencia.value.username,
+      useremail: emergencia.value.useremail,
+      userphonenumber: emergencia.value.userphonenumber
+    });
 
     if (response.status !== 201) {
       Toast.danger('Erro desconhecido. Contate o suporte técnico');
@@ -79,6 +110,8 @@ const sendAbulance = async () => {
 const setMaskToPhoneNumber = (phoneNumber) => {
   return '(' + phoneNumber[0] + phoneNumber[1] + ') ' + phoneNumber.substring(2, 7) + '-' + phoneNumber.substring(7, 11)
 }
+
+const close = () => showQuestion.value = false;
 
 </script>
 
@@ -127,7 +160,21 @@ const setMaskToPhoneNumber = (phoneNumber) => {
       </template>
       <template #footer>
         <div>
-          <FwbButton color="red">Acionar Ambulância</FwbButton>
+          <FwbButton color="red" @click="checkIsNecessary">Acionar Ambulância</FwbButton>
+        </div>
+      </template>
+    </FwbModal>
+    <FwbModal persistent v-if="showQuestion">
+      <template #header>
+        <h1>Confirme</h1>
+      </template>
+      <template #body>
+        <span>Já existe uma ambulância há caminho. Deseja enviar outra?</span>
+      </template>
+      <template #footer>
+        <div class="question">
+          <FwbButton color="red" @click="close">Não</FwbButton>
+          <FwbButton color="blue" @click="sendAbulance">Sim</FwbButton>
         </div>
       </template>
     </FwbModal>
@@ -150,5 +197,12 @@ const setMaskToPhoneNumber = (phoneNumber) => {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+
+.question {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  gap: 10px;
 }
 </style>
