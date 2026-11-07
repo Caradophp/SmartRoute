@@ -15,9 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class HealthAgent extends com.faesa.smartRoute.model.Entity {
 
-    @Column(name = "nome", nullable = false)
-    private String nome;
-
     @Column(name = "telefone", nullable = false, length = 11)
     private String telefone;
 
