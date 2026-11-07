@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +33,7 @@ public class EmergencyService {
         EmergencyDispachDto emergencyDispachDto = new EmergencyDispachDto(
                 emergencyDto.latitude(),
                 emergencyDto.longitude(),
+                String.valueOf(currentUser.getId()),
                 currentUser.getNome(),
                 currentUser.getEmail(),
                 currentUser.getTelefone());
@@ -72,7 +70,7 @@ public class EmergencyService {
 
     public Set<AmbulanceDto> checkIfIsNecessary(String id, Double longitude, Double latitude) {
         Set<Emergency> byAmbulanceIdAndLatitudeAndLongitudeAndAttendedFalse
-                = emergencyRepository.findByAmbulanceIdAndLatitudeAndLongitudeAndAttendedFalse(UUID.fromString(id), longitude, latitude);
+                = emergencyRepository.findByAppUserIdAndLatitudeAndLongitudeAndAttendedFalse(UUID.fromString(id),longitude, latitude);
 
         if (byAmbulanceIdAndLatitudeAndLongitudeAndAttendedFalse.isEmpty()) {
             return Collections.emptySet();
