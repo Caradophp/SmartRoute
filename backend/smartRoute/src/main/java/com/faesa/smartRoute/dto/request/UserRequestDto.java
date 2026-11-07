@@ -1,7 +1,8 @@
-package com.faesa.smartRoute.dto;
+package com.faesa.smartRoute.dto.request;
 
 import com.faesa.smartRoute.annotation.CPF;
 import com.faesa.smartRoute.annotation.Unique;
+import com.faesa.smartRoute.dto.RoleDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

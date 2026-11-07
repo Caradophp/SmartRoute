@@ -7,6 +7,14 @@ databaseChangeLog:
       file: db/changelog/02-add-primary-and-foreign-keys.sql
   - include:
       file: db/changelog/03-rename-ids-columns.sql
+  - include:
+      file: db/changelog/04-add-unique-constraint-to-ambulance-table.sql
+  - include:
+      file: db/changelog/05-create-driver-table.sql
+  - include:
+      file: db/changelog/06-emergency-flux.sql
+  - include:
+      file: db/changelog/07-drop-nome-column.sql
   - changeSet:
       id: 1
       author: nome

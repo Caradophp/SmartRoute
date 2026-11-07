@@ -1,4 +1,4 @@
-package com.faesa.smartRoute.dto;
+package com.faesa.smartRoute.dto.response;
 
 import com.faesa.smartRoute.model.User;
 

@@ -7,6 +7,8 @@ public record LoginDto(
         String email,
 
         @NotBlank(message = "Senha deve ser informada")
-        String senha
+        String senha,
+
+        Boolean isAplicatipo
 ) {
 }
