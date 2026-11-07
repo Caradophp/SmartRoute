@@ -1,7 +1,7 @@
 package com.faesa.smartRoute.controller;
 
-import com.faesa.smartRoute.dto.UserRequestDto;
-import com.faesa.smartRoute.dto.UserResponseDto;
+import com.faesa.smartRoute.dto.request.UserRequestDto;
+import com.faesa.smartRoute.dto.response.UserResponseDto;
 import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.service.UserService;
 import jakarta.validation.Valid;
