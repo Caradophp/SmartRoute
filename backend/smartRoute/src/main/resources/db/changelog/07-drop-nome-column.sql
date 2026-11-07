@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS health_agent
+DROP IF EXISTS nome;
