@@ -1,8 +1,7 @@
 package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.ChangePassDto;
-import com.faesa.smartRoute.dto.UserRequestDto;
-import com.faesa.smartRoute.dto.UserResponseDto;
+import com.faesa.smartRoute.dto.response.UserResponseDto;
 import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Code;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,11 +47,16 @@ public class LoginService {
     @Autowired
     private Jwt jwt;
 
-    public Map<String, String> login(String email, String senha) {
+    public Map<String, String> login(String email, String senha, boolean isAplicativo) {
         Map<String, String> result = new HashMap<>();
         UserDetails userDetails = userService.loadUserByUsername(email);
 
         User userToLogin = (User) userDetails;
+        boolean aplicativo = userService.isAplicativo(userToLogin);
+
+        if (!isAplicativo && aplicativo) {
+            throw new BusinessException("Usuário não encontrado");
+        }
 
         if (ACTIVE.equals(userToLogin.getStatus())) {
             if (!encrypter.verificar(senha, userDetails.getPassword())) {

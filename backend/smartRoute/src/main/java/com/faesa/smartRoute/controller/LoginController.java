@@ -3,7 +3,7 @@ package com.faesa.smartRoute.controller;
 import com.faesa.smartRoute.dto.ChangePassDto;
 import com.faesa.smartRoute.dto.CodeToCheckDto;
 import com.faesa.smartRoute.dto.LoginDto;
-import com.faesa.smartRoute.dto.UserResponseDto;
+import com.faesa.smartRoute.dto.response.UserResponseDto;
 import com.faesa.smartRoute.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,8 @@ public class LoginController {
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok().body(loginService.login(
                 loginDto.email(),
-                loginDto.senha()
+                loginDto.senha(),
+                loginDto.isAplicatipo()
         ));
     }
 

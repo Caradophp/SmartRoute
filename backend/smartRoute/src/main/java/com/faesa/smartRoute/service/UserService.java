@@ -196,6 +196,16 @@ public class UserService implements UserDetailsService, Aplicativo {
         userRepository.save(user);
     }
 
+    public boolean isAplicativo(User user) {
+        Optional<User> userFound = appUserRepository.findById(user.getId());
+
+        if (userFound.isPresent()) {
+            return true;
+        }
+
+        return false;
+    }
+
     private void sendEmailToFirstAccess(User user, String base64PasswordHash) {
         String to = user.getEmail();
         String subject = "Primeiro acesso ao sistema";
