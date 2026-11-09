@@ -15,6 +15,8 @@ databaseChangeLog:
       file: db/changelog/06-emergency-flux.sql
   - include:
       file: db/changelog/07-drop-nome-column.sql
+  - include:
+      file: db/changelog/08-add-longitude-and-latitude-columns.sql
   - changeSet:
       id: 1
       author: nome
