@@ -1,9 +1,8 @@
 package com.faesa.smartRoute.model;
 
-import jakarta.persistence.Column;
+import com.faesa.smartRoute.model.enums.HealthUnitType;
+import jakarta.persistence.*;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +21,9 @@ public class HealthUnit extends com.faesa.smartRoute.model.Entity {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    // TODO: Mudar para um enum
     @Column(name = "tipo", nullable = false)
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private HealthUnitType tipo;
 
     @Column(name = "longitude", nullable = false)
     private BigDecimal longitude;
