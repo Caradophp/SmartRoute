@@ -25,7 +25,7 @@ public class LoginController {
         return ResponseEntity.ok().body(loginService.login(
                 loginDto.email(),
                 loginDto.senha(),
-                loginDto.isAplicatipo()
+                loginDto.isAplicatipo() != null
         ));
     }
 
