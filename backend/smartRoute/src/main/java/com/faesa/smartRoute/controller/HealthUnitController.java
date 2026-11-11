@@ -1,13 +1,12 @@
 package com.faesa.smartRoute.controller;
 
+import com.faesa.smartRoute.dto.HealthUnitDto;
 import com.faesa.smartRoute.dto.response.NearesHealthPointResponseDto;
 import com.faesa.smartRoute.service.HealthUnitService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("health-unit")
@@ -15,6 +14,12 @@ public class HealthUnitController {
 
     @Autowired
     private HealthUnitService healthUnitService;
+
+    @PostMapping
+    public ResponseEntity<Void> saveUnit(@RequestBody @Valid HealthUnitDto healthUnitDto) {
+        healthUnitService.saveUnit(healthUnitDto);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/nearest")
     public ResponseEntity<NearesHealthPointResponseDto> findNearest(
