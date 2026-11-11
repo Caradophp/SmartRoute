@@ -6,6 +6,7 @@ import com.faesa.smartRoute.dto.response.NearesHealthPointResponseDto;
 import com.faesa.smartRoute.dto.response.OsrmRouteResponseDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.HealthUnit;
+import com.faesa.smartRoute.model.enums.HealthUnitType;
 import com.faesa.smartRoute.repository.HealthUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class HealthUnitService extends BaseService {
 
     @Autowired
     private RoutingService routingService;
+
+    public void saveUnit(HealthUnitDto healthUnitDto) {
+        HealthUnit healthUnit = this.convertToEntity(healthUnitDto, HealthUnit.class);
+        healthUnitRepository.save(healthUnit);
+    }
 
     public NearesHealthPointResponseDto findNearesHealthPoint(double userLatitude, double userLongitude) {
         List<HealthUnit> healthUnits = healthUnitRepository.findAll();
@@ -70,6 +76,7 @@ public class HealthUnitService extends BaseService {
                             new HealthUnitDto(
                                     String.valueOf(candidate.getId()),
                                     candidate.getNome(),
+                                    candidate.getTipo().toString(),
                                     candidate.getLatitude().doubleValue(),
                                     candidate.getLongitude().doubleValue()
                             );
@@ -87,7 +94,7 @@ public class HealthUnitService extends BaseService {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                throw e;
             }
         });
 
@@ -105,6 +112,18 @@ public class HealthUnitService extends BaseService {
 
     @Override
     public <E, D> E convertToEntity(D dto, Class<E> dClass) {
-        return null;
+
+        HealthUnitDto healthUnitDto = (HealthUnitDto) dto;
+        HealthUnit healthUnit = new HealthUnit();
+
+        if (healthUnitDto.id() != null && !healthUnitDto.id().isBlank()) {
+            healthUnit.setId(stringToUuid(healthUnitDto.id()));
+        }
+        healthUnit.setNome(healthUnitDto.name());
+        healthUnit.setTipo(HealthUnitType.valueOf(healthUnitDto.tipo()));
+        healthUnit.setLongitude(BigDecimal.valueOf(healthUnitDto.longitude()));
+        healthUnit.setLatitude(BigDecimal.valueOf(healthUnitDto.latitude()));
+
+        return (E) healthUnit;
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.Locale;
+
 @Service
 public class RoutingService {
 
@@ -13,22 +15,37 @@ public class RoutingService {
     private RestClient restClient;
 
 
-    public OsrmRouteResponseDto.OsrmRoute calculateRoute(double userLatitude,
-                                                         double userLongitude,
-                                                         double destinationLatitude,
-                                                         double destinationLongitude) {
+    public OsrmRouteResponseDto.OsrmRoute calculateRoute(
+            double userLatitude,
+            double userLongitude,
+            double destinationLatitude,
+            double destinationLongitude) {
 
-        String coordinates = userLongitude + "," + userLatitude + ";" + destinationLongitude + "," + destinationLatitude;
+        String coordinates = String.format(
+                Locale.US,
+                "%f,%f;%f,%f",
+                userLongitude,
+                userLatitude,
+                destinationLongitude,
+                destinationLatitude
+        );
 
         OsrmRouteResponseDto response = restClient.get()
-                .uri("/route/v1/driving/{coordinates}?overview=full&geometries=geojson", coordinates)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/route/v1/driving/" + coordinates)
+                        .queryParam("overview", "full")
+                        .queryParam("geometries", "geojson")
+                        .build())
                 .retrieve()
                 .body(OsrmRouteResponseDto.class);
 
         if (response == null || response.routes() == null || response.routes().isEmpty()) {
-            throw new RecordNotFoundException("Não foi encontrado nenhuma rota para essas coordenadas");
+            throw new RecordNotFoundException(
+                    "Não foi encontrada nenhuma rota para essas coordenadas"
+            );
         }
 
         return response.routes().getFirst();
     }
+
 }
