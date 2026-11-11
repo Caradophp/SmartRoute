@@ -9,6 +9,6 @@ public record LoginDto(
         @NotBlank(message = "Senha deve ser informada")
         String senha,
 
-        Boolean isAplicatipo
+        Boolean isAplicativo
 ) {
 }

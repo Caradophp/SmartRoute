@@ -43,6 +43,7 @@ public class EmergencyService {
         emergency.setLatitude(emergencyDto.latitude());
         emergency.setLongitude(emergencyDto.longitude());
         emergency.setAppUser(currentUser);
+        emergency.setAttended(Boolean.FALSE );
 
         emergencyRepository.save(emergency);
     }
@@ -54,7 +55,7 @@ public class EmergencyService {
         Emergency emergency = null;
 
         if (byLongitudeAndLatitude.isEmpty()) {
-            throw new RecordNotFoundException("Nunhuma emergência encontrada no local informado");
+            throw new RecordNotFoundException("Nenhuma emergência encontrada no local informado");
         } else {
             emergency = byLongitudeAndLatitude.getFirst();
         }
