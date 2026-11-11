@@ -16,7 +16,7 @@ const showLoader = ref(false);
 const openLoader = () => showLoader.value = true;
 const closeLoader = () => showLoader.value = false;
 const showEmergencyModal = ref(false);
-const showQuestion = ref(true);
+const showQuestion = ref(false);
 const emergencia = ref(null)
 
 provide("openLoader", openLoader)
@@ -102,6 +102,7 @@ const sendAbulance = async () => {
     }
 
     Toast.success('Ambulância Acionada')
+    showEmergencyModal.value = false;
   } catch (error) {
     Toast.error(error);
   }
@@ -111,7 +112,10 @@ const setMaskToPhoneNumber = (phoneNumber) => {
   return '(' + phoneNumber[0] + phoneNumber[1] + ') ' + phoneNumber.substring(2, 7) + '-' + phoneNumber.substring(7, 11)
 }
 
-const close = () => showQuestion.value = false;
+const close = () => {
+  showQuestion.value = false;
+  showEmergencyModal.value = false;
+}
 
 </script>
 

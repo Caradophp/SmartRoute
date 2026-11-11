@@ -34,7 +34,7 @@ public class AmbulanceService extends BaseService {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(cb.equal(root.get("status"), AmbulanceStaus.WAITING));
             return cb.and(predicates);
-        }).stream().findFirst().orElseThrow(RecordNotFoundException::new);
+        }).stream().findFirst().orElseThrow(() -> new RecordNotFoundException("Sem ambulâncias disponiveis no momento.", true));
     }
 
     @Override
