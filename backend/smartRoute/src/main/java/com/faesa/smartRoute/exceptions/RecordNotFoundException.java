@@ -1,5 +1,8 @@
 package com.faesa.smartRoute.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class RecordNotFoundException extends RuntimeException {
 
     private boolean isSevere = false;
@@ -17,7 +20,4 @@ public class RecordNotFoundException extends RuntimeException {
         this.isSevere = isSevere;
     }
 
-    public boolean isSevere() {
-        return isSevere;
-    }
 }
