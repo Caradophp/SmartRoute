@@ -1,6 +1,5 @@
 package com.faesa.smartRoute.dto;
 
-import com.faesa.smartRoute.model.enums.AmbulanceStaus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -12,7 +11,7 @@ public record AmbulanceDto(
         String placa,
 
         @NotNull(message = "Status da ambulância deve ser informado")
-        AmbulanceStaus status,
+        String status,
 
         @NotBlank(message = "Motorista deve ser informado")
         @Pattern(regexp = "[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}",

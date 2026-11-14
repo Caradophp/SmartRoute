@@ -1,6 +1,7 @@
 package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.request.DriverRequestDto;
+import com.faesa.smartRoute.dto.response.DriverResponseDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Driver;
 import com.faesa.smartRoute.model.User;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DriverService extends BaseService {
@@ -25,6 +23,12 @@ public class DriverService extends BaseService {
     private UserService userService;
 
     private final String[] LINCENSE_LEVELS_ALLOWED = {"A", "B", "C", "AB", "AC","ABC"};
+
+    public List<DriverResponseDto> findAll() {
+        return driverRepository.findAll()
+                .stream().map(d -> convertToDto(d, DriverResponseDto.class))
+                .toList();
+    }
 
     public void save(DriverRequestDto driverRequestDto) {
         String licenceLevel = driverRequestDto.driverLicenceLevel();
@@ -81,8 +85,8 @@ public class DriverService extends BaseService {
     @Override
     public <E, D> D convertToDto(E entity, Class<D> dClass) {
         Driver driver = (Driver) entity;
-        DriverRequestDto dto
-                = new DriverRequestDto(driver.getDriverLicenceLevel(), String.valueOf(driver.getDriver().getId()));
+        DriverResponseDto dto
+                = new DriverResponseDto(driver.getDriverLicenceLevel(), driver.getDriver().getNome(), driver.getDriver().getEmail());
 
         return (D) dto;
     }

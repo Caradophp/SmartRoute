@@ -39,6 +39,12 @@ public class AmbulanceService extends BaseService {
         }).stream().findFirst().orElseThrow(() -> new RecordNotFoundException("Sem ambulâncias disponiveis no momento.", true));
     }
 
+    public List<AmbulanceDto> findAll() {
+        return ambulanceRepository.findAll()
+                .stream().map(ambulance -> convertToDto(ambulance, AmbulanceDto.class))
+                .toList();
+    }
+
     public void save(AmbulanceDto ambulanceDto) {
         Ambulance ambulance = convertToEntity(ambulanceDto, Ambulance.class);
         ambulanceRepository.save(ambulance);
@@ -73,7 +79,7 @@ public class AmbulanceService extends BaseService {
         AmbulanceDto dto
                 = new AmbulanceDto(
                         ambulance.getPlaca(),
-                        ambulance.getStatus(),
+                        ambulance.getStatus().name(),
                         String.valueOf(ambulance.getDriver().getId()),
                         String.valueOf(ambulance.getHealthAgent().getId()));
 
@@ -90,7 +96,7 @@ public class AmbulanceService extends BaseService {
         HealthAgent healthAgent = healthAgentRepository.findById(UUID.fromString(ambulanceDto.healthAgentId())).orElseThrow();
 
         ambulance.setPlaca(ambulanceDto.placa());
-        ambulance.setStatus(ambulanceDto.status());
+        ambulance.setStatus(AmbulanceStaus.valueOf(ambulanceDto.status()));
         ambulance.setDriver(driver);
         ambulance.setHealthAgent(healthAgent);
 

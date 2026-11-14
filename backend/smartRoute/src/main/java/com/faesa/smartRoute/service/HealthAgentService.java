@@ -2,6 +2,7 @@ package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.HealthUnitDto;
 import com.faesa.smartRoute.dto.request.HealthAgentRequestDto;
+import com.faesa.smartRoute.dto.response.HealthAgentResponseDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.HealthAgent;
 import com.faesa.smartRoute.model.User;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +25,12 @@ public class HealthAgentService extends BaseService {
 
     @Autowired
     private UserService userService;
+
+    public List<HealthAgentResponseDto> findAll() {
+        return healthAgentRepository.findAll()
+                .stream().map(healthAgent -> convertToDto(healthAgent, HealthAgentResponseDto.class))
+                .toList();
+    }
 
     public void save(HealthAgentRequestDto healthAgentRequestDto) {
         String telefone = healthAgentRequestDto.telefone();
@@ -69,7 +77,12 @@ public class HealthAgentService extends BaseService {
 
     @Override
     public <E, D> D convertToDto(E entity, Class<D> dClass) {
-        return null;
+        HealthAgent healthAgent = (HealthAgent) entity;
+
+        HealthAgentResponseDto healthAgentResponseDto
+                = new HealthAgentResponseDto(healthAgent.getTelefone(), healthAgent.getUser().getNome(), healthAgent.getUser().getEmail());
+
+        return (D) healthAgentResponseDto;
     }
 
     @Override

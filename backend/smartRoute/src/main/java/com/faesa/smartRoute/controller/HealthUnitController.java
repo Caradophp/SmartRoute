@@ -9,12 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("health-unit")
 public class HealthUnitController {
 
     @Autowired
     private HealthUnitService healthUnitService;
+
+    @GetMapping("/listar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<HealthUnitDto>> findAll() {
+        List<HealthUnitDto> all = healthUnitService.findAll();
+        return ResponseEntity.ok(all);
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")

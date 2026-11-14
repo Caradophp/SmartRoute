@@ -1,6 +1,7 @@
 package com.faesa.smartRoute.controller;
 
 import com.faesa.smartRoute.dto.request.HealthAgentRequestDto;
+import com.faesa.smartRoute.dto.response.HealthAgentResponseDto;
 import com.faesa.smartRoute.service.HealthAgentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/health-agents")
 public class HealthAgentController {
 
     @Autowired
     private HealthAgentService healthAgentService;
+
+    @GetMapping("/listar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<HealthAgentResponseDto>> findAll() {
+        List<HealthAgentResponseDto> all = healthAgentService.findAll();
+        return ResponseEntity.ok(all);
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
