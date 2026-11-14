@@ -28,6 +28,12 @@ public class HealthUnitService extends BaseService {
     @Autowired
     private RoutingService routingService;
 
+    public List<HealthUnitDto> findAll() {
+        return healthUnitRepository.findAll()
+                .stream().map(healthUnit -> convertToDto(healthUnit, HealthUnitDto.class))
+                .toList();
+    }
+
     public void save(HealthUnitDto healthUnitDto) {
         HealthUnit healthUnit = this.convertToEntity(healthUnitDto, HealthUnit.class);
         healthUnitRepository.save(healthUnit);
@@ -132,7 +138,17 @@ public class HealthUnitService extends BaseService {
 
     @Override
     public <E, D> D convertToDto(E entity, Class<D> dClass) {
-        return null;
+        HealthUnit healthUnit = (HealthUnit) entity;
+
+        HealthUnitDto healthUnitDto
+                = new HealthUnitDto(
+                        String.valueOf(healthUnit.getId()),
+                        healthUnit.getNome(),
+                        healthUnit.getTipo().name(),
+                healthUnit.getLatitude().doubleValue(),
+                healthUnit.getLongitude().doubleValue());
+
+        return (D) healthUnitDto;
     }
 
     @Override
