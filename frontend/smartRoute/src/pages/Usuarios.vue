@@ -49,6 +49,11 @@ const setFormData = (data) => {
     nome.value = data.nome,
     email.value = data.email,
     cpf.value = data.cpf
+    perfils.value.forEach(element => {
+        if (element.id === data.userId) {
+            tipo.value = element;
+        }
+    });
 };
 
 // Função para desabilitar usuário
@@ -87,7 +92,7 @@ const enableUser = async () => {
 onMounted(() => {
     const getPerfils = async () => {
         try {
-            const response = await apiClient.get('http://localhost:8080/roles');
+            const response = await apiClient.get('http://localhost:8080/roles/listar');
 
             if (response.status !== 200)
                 Toast.danger('Erro desconhecido. Contate o suporte técnico');

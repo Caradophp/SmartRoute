@@ -10,6 +10,7 @@ import { FwbButton, FwbModal } from 'flowbite-vue';
 import { LMap, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css'
 import apiClient from './utils/Axios.js';
+import ExtendSession from './components/ExtendSession.vue';
 
 const showLoader = ref(false);
 
@@ -125,6 +126,7 @@ const close = () => {
     <Header />
     <RouterView />
     <Footer />
+    <ExtendSession />
     <FwbModal persistent v-if="showEmergencyModal" size="" position="top-start'">
       <template #header>
         <h2>Nova Emegência</h2>

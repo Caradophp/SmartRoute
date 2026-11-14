@@ -73,7 +73,7 @@ const inc = async () => {
     try {
         const response = await apiClient.post(`http://localhost:8080/${props.url}/create`, props.jsonData());
 
-        if (response.status !== 201) {
+        if (response.status !== 201 && response.status !== 200) {
             Toast.danger('Erro desconhecido ao inserir registro. Contate o suporte técnico');
             return;
         }
@@ -175,10 +175,11 @@ onMounted(() => {
                             :search-fields="formField.searchFields"
                             display="nome" 
                             placeholder=""
+                            :no-results-text="'Sem resultados para sua pesquisa'"
                             v-if="formField.fieldType == 'autocomplete'"
                         />
                         <!-- <FwbInput :type="formField.fieldType" v-model="formField.model.value"/> -->
-                        <FwbSelect v-else-if="formField.fieldType == 'select'" :options="formField.options" v-model="formField.model.value"/>
+                        <FwbSelect v-else-if="formField.fieldType == 'select'" :placeholder="'Selecione...'" :options="formField.options" v-model="formField.model.value"/>
                         <FwbTextarea v-else-if="formField.fieldType == 'textarea'" v-model="formField.model.value" />
                         <FwbInput :type="formField.fieldType" v-model="formField.model.value" v-else/>
                     </div>
