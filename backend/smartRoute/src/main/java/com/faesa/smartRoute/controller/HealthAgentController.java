@@ -2,12 +2,11 @@ package com.faesa.smartRoute.controller;
 
 import com.faesa.smartRoute.dto.request.HealthAgentRequestDto;
 import com.faesa.smartRoute.service.HealthAgentService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/health-agents")
@@ -16,8 +15,24 @@ public class HealthAgentController {
     @Autowired
     private HealthAgentService healthAgentService;
 
-    public ResponseEntity<Void> saveAgent(@RequestBody @Valid HealthAgentRequestDto healthAgentRequestDto) {
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> save(@RequestBody @Valid HealthAgentRequestDto healthAgentRequestDto) {
         healthAgentService.save(healthAgentRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/alter/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody @Valid HealthAgentRequestDto healthAgentRequestDto) {
+        healthAgentService.update(id, healthAgentRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        healthAgentService.delede(id);
         return ResponseEntity.ok().build();
     }
 

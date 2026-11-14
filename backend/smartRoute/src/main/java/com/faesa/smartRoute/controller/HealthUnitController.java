@@ -6,6 +6,7 @@ import com.faesa.smartRoute.service.HealthUnitService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,9 +16,24 @@ public class HealthUnitController {
     @Autowired
     private HealthUnitService healthUnitService;
 
-    @PostMapping
-    public ResponseEntity<Void> saveUnit(@RequestBody @Valid HealthUnitDto healthUnitDto) {
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> save(@RequestBody @Valid HealthUnitDto healthUnitDto) {
         healthUnitService.save(healthUnitDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/alter/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody @Valid HealthUnitDto healthUnitDto) {
+        healthUnitService.update(id, healthUnitDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        healthUnitService.delete(id);
         return ResponseEntity.ok().build();
     }
 
