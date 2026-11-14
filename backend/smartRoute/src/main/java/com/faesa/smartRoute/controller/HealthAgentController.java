@@ -17,7 +17,7 @@ public class HealthAgentController {
     private HealthAgentService healthAgentService;
 
     public ResponseEntity<Void> saveAgent(@RequestBody @Valid HealthAgentRequestDto healthAgentRequestDto) {
-        healthAgentService.saveAgent(healthAgentRequestDto);
+        healthAgentService.save(healthAgentRequestDto);
         return ResponseEntity.ok().build();
     }
 

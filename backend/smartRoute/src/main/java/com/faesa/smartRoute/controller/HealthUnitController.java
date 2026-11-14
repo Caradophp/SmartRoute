@@ -17,7 +17,7 @@ public class HealthUnitController {
 
     @PostMapping
     public ResponseEntity<Void> saveUnit(@RequestBody @Valid HealthUnitDto healthUnitDto) {
-        healthUnitService.saveUnit(healthUnitDto);
+        healthUnitService.save(healthUnitDto);
         return ResponseEntity.ok().build();
     }
 

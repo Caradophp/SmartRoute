@@ -8,9 +8,11 @@ import com.faesa.smartRoute.repository.DriverRepository;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,7 +26,7 @@ public class DriverService extends BaseService {
 
     private final String[] LINCENSE_LEVELS_ALLOWED = {"A", "B", "C", "AB", "AC","ABC"};
 
-    public void saveDriver(DriverRequestDto driverRequestDto) {
+    public void save(DriverRequestDto driverRequestDto) {
         String licenceLevel = driverRequestDto.driverLicenceLevel();
         UUID userId = UUID.fromString(driverRequestDto.userId());
         User userById = userService.findById(userId);
@@ -42,6 +44,37 @@ public class DriverService extends BaseService {
                 = new Driver(licenceLevel, userById);
 
         driverRepository.save(driver);
+
+    }
+
+    @Transactional
+    public void update(String id, DriverRequestDto driverRequestDto) {
+
+        Optional<Driver> driverOptional = driverRepository.findById(stringToUuid(id));
+
+        if (driverOptional.isEmpty()) {
+            throw new RecordNotFoundException("Motorsita não encontrado");
+        }
+
+        Driver driver = convertToEntity(driverRequestDto, Driver.class);
+
+        if (!checkIfLicenceLevelIsValid(driver.getDriverLicenceLevel())) {
+            throw new IllegalArgumentException("Tipo de carteira de motorista invalido. Tipos válidos: "
+                    + ArrayUtils.toString(LINCENSE_LEVELS_ALLOWED).replaceAll("[{}]", ""));
+        }
+
+        driverRepository.save(driver);
+    }
+
+    public void delete(String id) {
+        Optional<Driver> driverOptional = driverRepository.findById(stringToUuid(id));
+
+        if (driverOptional.isEmpty()) {
+            throw new RecordNotFoundException("Motorista não encontrado");
+        }
+
+        Driver driver = driverOptional.get();
+        driverRepository.delete(driver);
 
     }
 

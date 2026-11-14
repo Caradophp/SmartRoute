@@ -10,11 +10,10 @@ import com.faesa.smartRoute.model.enums.HealthUnitType;
 import com.faesa.smartRoute.repository.HealthUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -29,10 +28,36 @@ public class HealthUnitService extends BaseService {
     @Autowired
     private RoutingService routingService;
 
-    public void saveUnit(HealthUnitDto healthUnitDto) {
+    public void save(HealthUnitDto healthUnitDto) {
         HealthUnit healthUnit = this.convertToEntity(healthUnitDto, HealthUnit.class);
         healthUnitRepository.save(healthUnit);
     }
+
+    @Transactional
+    public void update(String id, HealthUnitDto healthUnitDto) {
+        HealthUnit healthUnit = convertToEntity(healthUnitDto, HealthUnit.class);
+
+        UUID uuid = stringToUuid(id);
+        if (!healthUnitRepository.existsById(uuid)) {
+            throw new RecordNotFoundException("Unidade de saúde não encontrada");
+        }
+
+        healthUnit.setId(uuid);
+        healthUnitRepository.save(healthUnit);
+    }
+
+    public void delete(String id) {
+        UUID uuid = stringToUuid(id);
+
+        Optional<HealthUnit> healthUnitOptional = healthUnitRepository.findById(uuid);
+
+        if (healthUnitOptional.isEmpty()) {
+            throw new RecordNotFoundException("Unidade de saúde não encontrada");
+        }
+
+        healthUnitRepository.delete(healthUnitOptional.get());
+    }
+
 
     public NearesHealthPointResponseDto findNearesHealthPoint(double userLatitude, double userLongitude) {
         List<HealthUnit> healthUnits = healthUnitRepository.findAll();

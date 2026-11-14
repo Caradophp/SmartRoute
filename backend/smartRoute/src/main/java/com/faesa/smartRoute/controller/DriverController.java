@@ -19,7 +19,7 @@ public class DriverController {
 
     @PostMapping
     private ResponseEntity<Void> saveDriver(@RequestBody @Valid DriverRequestDto driverRequestDto) {
-        driverService.saveDriver(driverRequestDto);
+        driverService.save(driverRequestDto);
         return ResponseEntity.ok().build();
     }
 

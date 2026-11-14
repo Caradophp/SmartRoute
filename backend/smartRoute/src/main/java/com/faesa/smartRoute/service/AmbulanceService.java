@@ -12,9 +12,11 @@ import com.faesa.smartRoute.repository.HealthAgentRepository;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,6 +37,34 @@ public class AmbulanceService extends BaseService {
             predicates.add(cb.equal(root.get("status"), AmbulanceStaus.WAITING));
             return cb.and(predicates);
         }).stream().findFirst().orElseThrow(() -> new RecordNotFoundException("Sem ambulâncias disponiveis no momento.", true));
+    }
+
+    public void save(AmbulanceDto ambulanceDto) {
+        Ambulance ambulance = convertToEntity(ambulanceDto, Ambulance.class);
+        ambulanceRepository.save(ambulance);
+    }
+
+    @Transactional
+    public void update(String id, AmbulanceDto ambulanceDto) {
+        Ambulance ambulance = convertToEntity(ambulanceDto, Ambulance.class);
+
+        UUID uuid = stringToUuid(id);
+        if (!ambulanceRepository.existsById(uuid)) {
+            throw new RecordNotFoundException("Ambulância não encontrada");
+        }
+
+        ambulance.setId(uuid);
+        ambulanceRepository.save(ambulance);
+    }
+
+    public void delete(String id) {
+        Optional<Ambulance> ambulanceOptional = ambulanceRepository.findById(stringToUuid(id));
+
+        if (ambulanceOptional.isEmpty()) {
+            throw new RecordNotFoundException("Ambulância não encontrada");
+        }
+
+        ambulanceRepository.delete(ambulanceOptional.get());
     }
 
     @Override
