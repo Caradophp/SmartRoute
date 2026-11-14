@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record RoleDto(
+        String id,
         @JsonProperty("nome")
         @NotBlank(message = "Nome do perfil deve ser informado")
         @Size(max = 50, message = "Nome do perfil deve ter no máximo 50 caracteres")

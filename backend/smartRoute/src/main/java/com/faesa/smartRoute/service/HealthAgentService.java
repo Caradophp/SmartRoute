@@ -80,7 +80,7 @@ public class HealthAgentService extends BaseService {
         HealthAgent healthAgent = (HealthAgent) entity;
 
         HealthAgentResponseDto healthAgentResponseDto
-                = new HealthAgentResponseDto(healthAgent.getTelefone(), healthAgent.getUser().getNome(), healthAgent.getUser().getEmail());
+                = new HealthAgentResponseDto(uuidToString(healthAgent.getId()), healthAgent.getTelefone(), healthAgent.getUser().getNome(), healthAgent.getUser().getEmail());
 
         return (D) healthAgentResponseDto;
     }
