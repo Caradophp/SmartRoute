@@ -62,13 +62,13 @@ public class RoleService extends BaseService {
     }
 
     private RoleDto converToDto(Role role) {
-        return new RoleDto(role.getNomePerfil());
+        return new RoleDto(uuidToString(role.getId()), role.getNomePerfil());
     }
 
     @Override
     public <E, D> D convertToDto(E entity, Class<D> dClass) {
         Role role = (Role) entity;
-        RoleDto dto = new RoleDto(role.getNomePerfil());
+        RoleDto dto = new RoleDto(uuidToString(role.getId()), role.getNomePerfil());
         return (D) dto;
     }
 

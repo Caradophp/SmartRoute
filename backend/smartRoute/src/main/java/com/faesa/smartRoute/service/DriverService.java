@@ -67,6 +67,7 @@ public class DriverService extends BaseService {
                     + ArrayUtils.toString(LINCENSE_LEVELS_ALLOWED).replaceAll("[{}]", ""));
         }
 
+        driver.setId(stringToUuid(id));
         driverRepository.save(driver);
     }
 
@@ -86,7 +87,7 @@ public class DriverService extends BaseService {
     public <E, D> D convertToDto(E entity, Class<D> dClass) {
         Driver driver = (Driver) entity;
         DriverResponseDto dto
-                = new DriverResponseDto(driver.getDriverLicenceLevel(), driver.getDriver().getNome(), driver.getDriver().getEmail());
+                = new DriverResponseDto(uuidToString(driver.getId()), driver.getDriverLicenceLevel(), driver.getDriver().getNome(), driver.getDriver().getEmail());
 
         return (D) dto;
     }

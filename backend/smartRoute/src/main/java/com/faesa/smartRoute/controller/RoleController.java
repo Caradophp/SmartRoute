@@ -17,7 +17,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<RoleDto>> findAll() {
         List<RoleDto> allRoles = roleService.findAll();
         return ResponseEntity.ok(allRoles);
