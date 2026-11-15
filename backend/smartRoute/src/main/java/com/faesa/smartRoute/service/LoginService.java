@@ -77,6 +77,9 @@ public class LoginService {
 
             String token = jwt.generateToken(email);
             result.put("token", token);
+            result.put("id", String.valueOf(userToLogin.getId()));
+            result.put("nome", userToLogin.getNome());
+            result.put("email", userToLogin.getEmail());
             return result;
         } else if (BLOCKED.equals(userToLogin.getStatus())) {
             handleBlockedUser(userToLogin);
