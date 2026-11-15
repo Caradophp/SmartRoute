@@ -1,9 +1,11 @@
 <script setup>
 import RecoveryPassDialog from '@/components/RecoveryPassDialog.vue';
 import Toast from '@/utils/Toast';
+import { useUserStore } from '@/utils/User';
 import axios from 'axios';
 import { FwbA, FwbButton } from 'flowbite-vue';
 import { inject, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const showRecoveryPassForm = ref(false);
 
@@ -17,6 +19,9 @@ const closeLoader = inject("closeLoader");
 const recoveryPass = () => {
     showRecoveryPassForm.value = true;
 }
+
+const store = useUserStore();
+const router = useRouter();
 
 const login = async (event) => {
     event.preventDefault();
@@ -34,8 +39,14 @@ const login = async (event) => {
 
         const data = await response.data;
         localStorage.setItem("token", data.token);
+        store.setUser({
+            id: data.id,
+            nome: data.nome,
+            email: data.email
+        });
+        closeLoader();
         Toast.info('Logado com sucesso. Redirecionando...')
-        location.href = '/home';
+        router.push('/home');
     } catch (erro) {
         Toast.error(erro)
         closeLoader();
