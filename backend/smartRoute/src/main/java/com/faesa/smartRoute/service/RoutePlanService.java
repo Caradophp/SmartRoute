@@ -1,7 +1,9 @@
 package com.faesa.smartRoute.service;
 
+import com.faesa.smartRoute.dto.RoutePlanDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.RoutePlan;
+import com.faesa.smartRoute.model.enums.RoutePlanStatus;
 import com.faesa.smartRoute.repository.RoutePlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,33 +13,37 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class RoutePlanService {
+public class RoutePlanService extends BaseService{
 
     @Autowired
     private RoutePlanRepository repository;
 
-    public List<RoutePlan> findAll() {
-        return repository.findAll();
+    public List<RoutePlanDto> findAll() {
+        return repository.findAll()
+                .stream().map(routePlan -> convertToDto(routePlan, RoutePlanDto.class))
+                .toList();
     }
 
-    public RoutePlan findById(String id) {
+    public RoutePlanDto findById(String id) {
         return repository.findById(UUID.fromString(id))
+                .map(routePlan -> convertToDto(routePlan, RoutePlanDto.class))
                 .orElseThrow(() -> new RecordNotFoundException("Plano de rota não encontrado"));
     }
 
-    public RoutePlan save(RoutePlan entity) {
-        entity.setId(null);
-        return repository.save(entity);
+    public void save(RoutePlanDto dto) {
+        RoutePlan entity = convertToEntity(dto, RoutePlan.class);
+        repository.save(entity);
     }
 
     @Transactional
-    public RoutePlan update(String id, RoutePlan entity) {
+    public void update(String id, RoutePlanDto dto) {
         UUID uuid = UUID.fromString(id);
         if (!repository.existsById(uuid)) {
             throw new RecordNotFoundException("Plano de rota não encontrado");
         }
+        RoutePlan entity = convertToEntity(dto, RoutePlan.class);
         entity.setId(uuid);
-        return repository.save(entity);
+        repository.save(entity);
     }
 
     @Transactional
@@ -47,5 +53,28 @@ public class RoutePlanService {
             throw new RecordNotFoundException("Plano de rota não encontrado");
         }
         repository.deleteById(uuid);
+    }
+
+    @Override
+    public <E, D> D convertToDto(E entity, Class<D> dClass) {
+        RoutePlan routePlan = (RoutePlan) entity;
+
+        RoutePlanDto routePlanDto
+                = new RoutePlanDto(uuidToString(routePlan.getId()), routePlan.getNome(), routePlan.getData(), routePlan.getStatus().name());
+
+        return (D) routePlanDto;
+    }
+
+    @Override
+    public <E, D> E convertToEntity(D dto, Class<E> dClass) {
+        RoutePlanDto routePlanDto = (RoutePlanDto) dto;
+
+        RoutePlan routePlan = new RoutePlan();
+        routePlan.setId(stringToUuid(routePlanDto.id()));
+        routePlan.setNome(routePlanDto.nome());
+        routePlan.setData(routePlanDto.data());
+        routePlan.setStatus(RoutePlanStatus.valueOf(routePlanDto.status()));
+
+        return (E) routePlan;
     }
 }

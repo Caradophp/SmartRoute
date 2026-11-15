@@ -21,4 +21,8 @@ public class HealthAgent extends com.faesa.smartRoute.model.Entity {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "route_id")
+    private RoutePlan routePlan;
 }
