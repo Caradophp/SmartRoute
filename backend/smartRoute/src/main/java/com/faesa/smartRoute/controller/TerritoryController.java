@@ -1,6 +1,6 @@
 package com.faesa.smartRoute.controller;
 
-import com.faesa.smartRoute.model.Territory;
+import com.faesa.smartRoute.dto.TerritoryDto;
 import com.faesa.smartRoute.service.TerritoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +19,28 @@ public class TerritoryController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Territory>> findAll() {
+    public ResponseEntity<List<TerritoryDto>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Territory> findById(@PathVariable String id) {
+    public ResponseEntity<TerritoryDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Territory> save(@RequestBody @Valid Territory entity) {
-        return ResponseEntity.ok(service.save(entity));
+    public ResponseEntity<Void> save(@RequestBody @Valid TerritoryDto dto) {
+        service.save(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/alter/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Territory> update(@PathVariable String id, @RequestBody @Valid Territory entity) {
-        return ResponseEntity.ok(service.update(id, entity));
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody @Valid TerritoryDto dto) {
+        service.update(id, dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
