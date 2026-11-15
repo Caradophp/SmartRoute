@@ -17,7 +17,7 @@ public class RoutePlanController {
     @Autowired
     private RoutePlanService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RoutePlan>> findAll() {
         return ResponseEntity.ok(service.findAll());

@@ -18,7 +18,7 @@ public class HealthServiceController {
     @Autowired
     private HealthServiceService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<HealthServiceDto>> findAll() {
         return ResponseEntity.ok(service.findAll());

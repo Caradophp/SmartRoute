@@ -18,7 +18,7 @@ public class AssistedPersonController {
     @Autowired
     private AssistedPersonService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AssistedPersonDto>> findAll() {
         return ResponseEntity.ok(service.findAll());

@@ -17,7 +17,7 @@ public class TerritoryController {
     @Autowired
     private TerritoryService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TerritoryDto>> findAll() {
         return ResponseEntity.ok(service.findAll());

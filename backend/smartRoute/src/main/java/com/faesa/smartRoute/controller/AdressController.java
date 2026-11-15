@@ -19,7 +19,7 @@ public class AdressController {
     @Autowired
     private AdressService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AdressResponseDto>> findAll() {
         return ResponseEntity.ok(service.findAll());
