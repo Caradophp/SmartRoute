@@ -17,10 +17,16 @@ public abstract class BaseService {
     public abstract <E, D> E convertToEntity(D dto, Class<E> dClass);
 
     protected UUID stringToUuid(String uuid) {
+        if (uuid == null) {
+            return null;
+        }
         return UUID.fromString(uuid);
     }
 
     protected String uuidToString(UUID uuid) {
+        if (uuid == null) {
+            return null;
+        }
         return String.valueOf(uuid);
     }
 

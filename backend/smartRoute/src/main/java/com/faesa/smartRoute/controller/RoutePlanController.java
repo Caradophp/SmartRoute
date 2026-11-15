@@ -1,5 +1,6 @@
 package com.faesa.smartRoute.controller;
 
+import com.faesa.smartRoute.dto.RoutePlanDto;
 import com.faesa.smartRoute.model.RoutePlan;
 import com.faesa.smartRoute.service.RoutePlanService;
 import jakarta.validation.Valid;
@@ -17,34 +18,36 @@ public class RoutePlanController {
     @Autowired
     private RoutePlanService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<RoutePlan>> findAll() {
+    public ResponseEntity<List<RoutePlanDto>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RoutePlan> findById(@PathVariable String id) {
+    public ResponseEntity<RoutePlanDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RoutePlan> save(@RequestBody @Valid RoutePlan entity) {
-        return ResponseEntity.ok(service.save(entity));
+    public ResponseEntity<Void> save(@RequestBody @Valid RoutePlanDto dto) {
+        service.save(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/alter/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RoutePlan> update(@PathVariable String id, @RequestBody @Valid RoutePlan entity) {
-        return ResponseEntity.ok(service.update(id, entity));
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody @Valid RoutePlanDto dto) {
+        service.update(id, dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

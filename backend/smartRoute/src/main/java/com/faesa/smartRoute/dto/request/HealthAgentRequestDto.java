@@ -8,6 +8,7 @@ public record HealthAgentRequestDto(
         @Phone(message = "Número de telefone inválido")
         String telefone,
         @NotBlank(message = "Usuário deve ser informado")
-        String userId
+        String userId,
+        String routeId
 ) {
 }

@@ -1,12 +1,13 @@
 package com.faesa.smartRoute.service;
 
-import com.faesa.smartRoute.dto.HealthUnitDto;
 import com.faesa.smartRoute.dto.request.HealthAgentRequestDto;
 import com.faesa.smartRoute.dto.response.HealthAgentResponseDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.HealthAgent;
+import com.faesa.smartRoute.model.RoutePlan;
 import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.repository.HealthAgentRepository;
+import com.faesa.smartRoute.repository.RoutePlanRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,11 @@ import java.util.UUID;
 @Service
 public class HealthAgentService extends BaseService {
 
-
     @Autowired
     private HealthAgentRepository healthAgentRepository;
+
+    @Autowired
+    private RoutePlanRepository routePlanRepository;
 
     @Autowired
     private UserService userService;
@@ -42,9 +45,12 @@ public class HealthAgentService extends BaseService {
                 .replaceChars(telefone, "[-()]", "")
                 .trim();
 
+        RoutePlan routePlan = routePlanRepository.findById(stringToUuid(healthAgentRequestDto.routeId())).orElseThrow(RecordNotFoundException::new);
+
         HealthAgent healthAgent = new HealthAgent();
         healthAgent.setTelefone(telefone);
         healthAgent.setUser(user);
+        healthAgent.setRoutePlan(routePlan);
 
         healthAgentRepository.save(healthAgent);
     }
@@ -92,9 +98,17 @@ public class HealthAgentService extends BaseService {
         HealthAgent healthAgent = new HealthAgent();
 
         User user = userService.findById(stringToUuid(healthAgentRequestDto.userId()));
+        Optional<RoutePlan> routePlanOptional = routePlanRepository.findById(stringToUuid(healthAgentRequestDto.routeId()));
+
+        if (routePlanOptional.isEmpty()) {
+            throw new RecordNotFoundException("Plano de rota não encontrado");
+        }
+
+        RoutePlan routePlan = routePlanOptional.get();
 
         healthAgent.setUser(user);
         healthAgent.setTelefone(healthAgentRequestDto.telefone());
+        healthAgent.setRoutePlan(routePlan);
 
         return (E) healthAgent;
     }

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity(name = "RoutePlan")
 @Table(name = "route_plan")
@@ -19,15 +18,14 @@ import java.util.Set;
 @NoArgsConstructor
 public class RoutePlan extends com.faesa.smartRoute.model.Entity {
 
+    @Column(name = "nome", nullable = false)
+    private String nome;
+
     @Column(name = "data", nullable = false, columnDefinition = "DATE")
     private LocalDate data;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private RoutePlanStatus status;
-
-    @OneToMany
-    @JoinColumn(name = "agent_id", nullable = false)
-    private Set<HealthAgent> healthAgent;
 
 }

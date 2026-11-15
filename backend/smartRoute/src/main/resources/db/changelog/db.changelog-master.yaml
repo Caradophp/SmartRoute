@@ -17,6 +17,12 @@ databaseChangeLog:
       file: db/changelog/07-drop-nome-column.sql
   - include:
       file: db/changelog/08-add-longitude-and-latitude-columns.sql
+  - include:
+      file: db/changelog/09-create-function-to-regiter-assisted-person.sql
+  - include:
+      file: db/changelog/10-add-foreign-key-to-vulnerability.sql
+  - include:
+      file: db/changelog/11-add-vulnerability-id-in-function.sql
   - changeSet:
       id: 1
       author: nome
