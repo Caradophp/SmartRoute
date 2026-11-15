@@ -4,8 +4,10 @@ import com.faesa.smartRoute.dto.AssistedPersonDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Adress;
 import com.faesa.smartRoute.model.AssistedPerson;
+import com.faesa.smartRoute.model.VulnerabilityType;
 import com.faesa.smartRoute.repository.AdressRepository;
 import com.faesa.smartRoute.repository.AssistedPersonRepository;
+import com.faesa.smartRoute.repository.VulnerabilityTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,9 @@ public class AssistedPersonService extends BaseService {
 
     @Autowired
     private AdressRepository adressRepository;
+
+    @Autowired
+    private VulnerabilityTypeRepository vulnerabilityTypeRepository;
 
     public List<AssistedPersonDto> findAll() {
         return repository.findAll()
@@ -44,7 +49,8 @@ public class AssistedPersonService extends BaseService {
                 dto.numero(),
                 dto.bairro(),
                 dto.bairro(),
-                stringToUuid(dto.idTerritorio())
+                stringToUuid(dto.idTerritorio()),
+                stringToUuid(dto.vulnerabilityId())
         );
     }
 
@@ -83,7 +89,8 @@ public class AssistedPersonService extends BaseService {
                         adress.getNumero(),
                         adress.getBairro(),
                         adress.getCidade(),
-                        uuidToString(adress.getTerritorio().getId())
+                        uuidToString(adress.getTerritorio().getId()),
+                        uuidToString(assistedPerson.getVulnerabilityType().getId())
                 );
 
         return (D) assistedPersonDto;
@@ -93,6 +100,7 @@ public class AssistedPersonService extends BaseService {
     public <E, D> E convertToEntity(D dto, Class<E> dClass) {
         AssistedPersonDto assistedPersonDto = (AssistedPersonDto) dto;
         Optional<Adress> byNumero = adressRepository.findByNumero(assistedPersonDto.numero());
+        Optional<VulnerabilityType> vulnerabilityTypeOptional = vulnerabilityTypeRepository.findById(stringToUuid(assistedPersonDto.vulnerabilityId()));
 
         if (byNumero.isEmpty()) {
             throw new RecordNotFoundException("Endereço não encontrado");
@@ -100,8 +108,15 @@ public class AssistedPersonService extends BaseService {
 
         Adress adress = byNumero.get();
 
+        if (vulnerabilityTypeOptional.isEmpty()) {
+            throw new RecordNotFoundException("Tipo de vulnerabilidade não encontrada");
+        }
+
+        VulnerabilityType vulnerabilityType = vulnerabilityTypeOptional.get();
+
         AssistedPerson assistedPerson = new AssistedPerson();
         assistedPerson.setAdress(adress);
+        assistedPerson.setVulnerabilityType(vulnerabilityType);
         assistedPerson.setNome(assistedPersonDto.nome());
         assistedPerson.setTelefone(assistedPersonDto.telefone());
         assistedPerson.setDataNascimento(assistedPersonDto.dataNascimento());

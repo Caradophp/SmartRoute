@@ -11,6 +11,7 @@ public record AssistedPersonDto(
         Integer numero,
         String bairro,
         String cidade,
-        String idTerritorio
+        String idTerritorio,
+        String vulnerabilityId
 ) {
 }

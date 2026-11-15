@@ -30,4 +30,8 @@ public class AssistedPerson extends com.faesa.smartRoute.model.Entity {
     @JoinColumn(name = "adress_id", nullable = false)
     private Adress adress;
 
+    @ManyToOne
+    @JoinColumn(name = "vulnerability_id", nullable = false, foreignKey = @ForeignKey(name = "fk_person_vulnerability"))
+    private VulnerabilityType vulnerabilityType;
+
 }
