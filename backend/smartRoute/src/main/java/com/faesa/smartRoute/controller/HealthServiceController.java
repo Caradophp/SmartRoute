@@ -1,5 +1,6 @@
 package com.faesa.smartRoute.controller;
 
+import com.faesa.smartRoute.dto.HealthServiceDto;
 import com.faesa.smartRoute.model.HealthService;
 import com.faesa.smartRoute.service.HealthServiceService;
 import jakarta.validation.Valid;
@@ -19,26 +20,28 @@ public class HealthServiceController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<HealthService>> findAll() {
+    public ResponseEntity<List<HealthServiceDto>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<HealthService> findById(@PathVariable String id) {
+    public ResponseEntity<HealthServiceDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<HealthService> save(@RequestBody @Valid HealthService entity) {
-        return ResponseEntity.ok(service.save(entity));
+    public ResponseEntity<Void> save(@RequestBody @Valid HealthServiceDto dto) {
+        service.save(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/alter/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<HealthService> update(@PathVariable String id, @RequestBody @Valid HealthService entity) {
-        return ResponseEntity.ok(service.update(id, entity));
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody @Valid HealthServiceDto dto) {
+        service.update(id, dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
