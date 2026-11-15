@@ -48,6 +48,7 @@ public class AdressService extends BaseService {
             throw new RecordNotFoundException("Adress não encontrado");
         }
         Adress entity = convertToEntity(dto, Adress.class);
+        entity.setId(uuid);
         repository.save(entity);
     }
 
