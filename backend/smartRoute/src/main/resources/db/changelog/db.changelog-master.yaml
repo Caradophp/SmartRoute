@@ -23,6 +23,8 @@ databaseChangeLog:
       file: db/changelog/10-add-foreign-key-to-vulnerability.sql
   - include:
       file: db/changelog/11-add-vulnerability-id-in-function.sql
+  - include:
+      file: db/changelog/12-corrige-fk.sql
   - changeSet:
       id: 1
       author: nome
