@@ -206,11 +206,13 @@ onMounted(() => {
 <style scoped>
 
 .main-page {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
+    padding: 24px;
 }
 
 .input-content {

@@ -10,6 +10,7 @@ import Motoristas from './pages/Motoristas.vue'
 import HealthAgent from './pages/HealthAgent.vue'
 import HealthUnit from './pages/HealthUnit.vue'
 import Roles from './pages/Roles.vue'
+import Areas from './pages/Areas.vue'
 import { createPinia } from 'pinia'
 
 const routes = [
@@ -17,6 +18,10 @@ const routes = [
         path: '/',
         redirect: '/login',
     },
+    {
+    path: '/areas',
+    component: Areas,
+},
     {
         path: '/login',
         component: Login,
@@ -34,9 +39,13 @@ const routes = [
         component: Ambulancias,
     },
     {
-        path: '/motoritas',
-        component: Motoristas,
-    },
+    path: '/motoristas',
+    component: Motoristas,
+},
+{
+    path: '/motoritas',
+    redirect: '/motoristas',
+},
     {
         path: '/agentes',
         component: HealthAgent,

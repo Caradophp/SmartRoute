@@ -1,10 +1,23 @@
 
 <script setup>
 import logo from '../assets/img/logo.png'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+
+const cadastrosAberto = ref(false)
+
+const cadastros = [
+  { nome: 'Usuários', caminho: '/usuarios' },
+  { nome: 'Motoristas', caminho: '/motoristas' },
+  { nome: 'Unidades de Saúde', caminho: '/unidades' },
+  { nome: 'Perfis', caminho: '/papeis' }
+]
+
+const cadastroAtivo = computed(() =>
+  cadastros.some(item => item.caminho === route.path)
+)
 
 const showHeader = computed(() => route.path !== '/login')
 
@@ -37,6 +50,31 @@ const links = [
         <span class="nav-icon">{{ link.icone }}</span>
         {{ link.nome }}
       </RouterLink>
+      <div class="cadastros-menu">
+  <button
+    type="button"
+    class="nav-link cadastros-button"
+    :class="{ active: cadastroAtivo }"
+    :aria-expanded="cadastrosAberto"
+    @click="cadastrosAberto = !cadastrosAberto"
+  >
+    <span class="nav-icon">▦</span>
+    Cadastros
+    <span class="menu-arrow">⌄</span>
+  </button>
+
+  <div v-if="cadastrosAberto" class="cadastros-dropdown">
+    <RouterLink
+      v-for="item in cadastros"
+      :key="item.caminho"
+      :to="item.caminho"
+      class="dropdown-link"
+      @click="cadastrosAberto = false"
+    >
+      {{ item.nome }}
+    </RouterLink>
+  </div>
+</div>
     </nav>
 
     <div class="header-user">
@@ -189,4 +227,57 @@ const links = [
     font-size: 12px;
   }
 }
+
+.cadastros-menu {
+  position: relative;
+}
+
+.cadastros-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.menu-arrow {
+  font-size: 16px;
+}
+
+.cadastros-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+  min-width: 210px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #e5edf5;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(20, 65, 120, 0.12);
+}
+
+.dropdown-link {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 9px;
+  color: #173b70;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-link:hover,
+.dropdown-link.router-link-active {
+  background: #edf4fb;
+  color: #0755a8;
+}
+
+@media (max-width: 600px) {
+  .cadastros-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
 </style>

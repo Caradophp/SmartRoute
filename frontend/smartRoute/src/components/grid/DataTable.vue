@@ -27,13 +27,9 @@ const props = defineProps({
         required: true
     },
     onDelete: {
-        type: Function,
-        required: true
-    },
-    needReload: {
-        type: Function,
-        required: true
-    }
+    type: Function,
+    required: true
+}
 });
 
 const tableData = ref([]);

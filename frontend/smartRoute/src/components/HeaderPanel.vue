@@ -30,24 +30,59 @@ const emit = defineEmits(['update:inputSearch']);
     </div>
 </template>
 
-<style scoped>
 
+<style scoped>
 .container {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    gap: 10px;
-    border: 1px solid black;
-    border-radius: 10px;
     width: 100%;
-    margin: 10px;
-    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px 24px;
+    margin: 0;
+    background: #ffffff;
+    border: 1px solid #e5edf5;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(20, 62, 110, 0.06);
+    box-sizing: border-box;
 }
 
 .container section {
     display: flex;
-    flex-direction: row;
-    gap: 5px;
+    align-items: center;
+    flex: 1;
+    max-width: 480px;
+    min-width: 0;
+    gap: 10px;
 }
 
+.container section :deep(input) {
+    border-radius: 10px;
+    border-color: #dce6f1;
+    background: #f8fbff;
+}
+
+.container :deep(button) {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.container :deep(button:hover) {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    .container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px;
+    }
+
+    .container section {
+        max-width: 100%;
+        width: 100%;
+    }
+}
 </style>
