@@ -3,6 +3,7 @@ package com.faesa.smartRoute.controller;
 import com.faesa.smartRoute.dto.ChangePassDto;
 import com.faesa.smartRoute.dto.CodeToCheckDto;
 import com.faesa.smartRoute.dto.LoginDto;
+import com.faesa.smartRoute.dto.response.UserResponseDto;
 import com.faesa.smartRoute.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/login")
@@ -22,7 +24,8 @@ public class LoginController {
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok().body(loginService.login(
                 loginDto.email(),
-                loginDto.senha()
+                loginDto.senha(),
+                loginDto.isAplicativo() != null
         ));
     }
 
@@ -42,5 +45,16 @@ public class LoginController {
     public ResponseEntity<Void> changePass(@RequestBody ChangePassDto changePassDto) {
         loginService.changePass(changePassDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/is-valid")
+    public ResponseEntity<Void> isValidLink(@RequestParam("user") String user, @RequestParam("expires") long expires, @RequestParam("sig") String sig) {
+        String link = "user=" + user + "&expires=" + expires + "&sig=" + sig;
+        return loginService.isValidLink(link) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> loadUser(@PathVariable UUID id) {
+        return ResponseEntity.ok(loginService.loadUser(id));
     }
 }

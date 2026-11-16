@@ -1,0 +1,115 @@
+package com.faesa.smartRoute.service;
+
+import com.faesa.smartRoute.dto.request.HealthAgentRequestDto;
+import com.faesa.smartRoute.dto.response.HealthAgentResponseDto;
+import com.faesa.smartRoute.exceptions.RecordNotFoundException;
+import com.faesa.smartRoute.model.HealthAgent;
+import com.faesa.smartRoute.model.RoutePlan;
+import com.faesa.smartRoute.model.User;
+import com.faesa.smartRoute.repository.HealthAgentRepository;
+import com.faesa.smartRoute.repository.RoutePlanRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class HealthAgentService extends BaseService {
+
+    @Autowired
+    private HealthAgentRepository healthAgentRepository;
+
+    @Autowired
+    private RoutePlanRepository routePlanRepository;
+
+    @Autowired
+    private UserService userService;
+
+    public List<HealthAgentResponseDto> findAll() {
+        return healthAgentRepository.findAll()
+                .stream().map(healthAgent -> convertToDto(healthAgent, HealthAgentResponseDto.class))
+                .toList();
+    }
+
+    public void save(HealthAgentRequestDto healthAgentRequestDto) {
+        String telefone = healthAgentRequestDto.telefone();
+        UUID userId = UUID.fromString(healthAgentRequestDto.userId());
+        User user = userService.findById(userId);
+
+        // Sanitiza telefone removendo máscara
+        telefone = StringUtils
+                .replaceChars(telefone, "[-()]", "")
+                .trim();
+
+        RoutePlan routePlan = routePlanRepository.findById(stringToUuid(healthAgentRequestDto.routeId())).orElseThrow(RecordNotFoundException::new);
+
+        HealthAgent healthAgent = new HealthAgent();
+        healthAgent.setTelefone(telefone);
+        healthAgent.setUser(user);
+        healthAgent.setRoutePlan(routePlan);
+
+        healthAgentRepository.save(healthAgent);
+    }
+
+    @Transactional
+    public void update(String id, HealthAgentRequestDto healthAgentRequestDto) {
+        HealthAgent healthAgent = convertToEntity(healthAgentRequestDto, HealthAgent.class);
+
+        UUID uuid = stringToUuid(id);
+        if (healthAgentRepository.existsById(uuid)) {
+            throw new RecordNotFoundException("Agênte de saúde não encontrado");
+        }
+
+        healthAgent.setId(uuid);
+        healthAgent.setTelefone(StringUtils
+                .replaceChars(healthAgent.getTelefone(), "[-()]", "")
+                .trim());
+        healthAgentRepository.save(healthAgent);
+    }
+
+    public void delede(String id) {
+        Optional<HealthAgent> healthAgentOptional = healthAgentRepository.findById(stringToUuid(id));
+
+        if (healthAgentOptional.isEmpty()) {
+            throw new RecordNotFoundException("Agente de saúde não encontrado");
+        }
+
+        healthAgentRepository.delete(healthAgentOptional.get());
+    }
+
+    @Override
+    public <E, D> D convertToDto(E entity, Class<D> dClass) {
+        HealthAgent healthAgent = (HealthAgent) entity;
+
+        HealthAgentResponseDto healthAgentResponseDto
+                = new HealthAgentResponseDto(uuidToString(healthAgent.getId()), healthAgent.getTelefone(), healthAgent.getUser().getNome(), healthAgent.getUser().getEmail());
+
+        return (D) healthAgentResponseDto;
+    }
+
+    @Override
+    public <E, D> E convertToEntity(D dto, Class<E> dClass) {
+        HealthAgentRequestDto healthAgentRequestDto = (HealthAgentRequestDto) dto;
+
+        HealthAgent healthAgent = new HealthAgent();
+
+        User user = userService.findById(stringToUuid(healthAgentRequestDto.userId()));
+        Optional<RoutePlan> routePlanOptional = routePlanRepository.findById(stringToUuid(healthAgentRequestDto.routeId()));
+
+        if (routePlanOptional.isEmpty()) {
+            throw new RecordNotFoundException("Plano de rota não encontrado");
+        }
+
+        RoutePlan routePlan = routePlanOptional.get();
+
+        healthAgent.setUser(user);
+        healthAgent.setTelefone(healthAgentRequestDto.telefone());
+        healthAgent.setRoutePlan(routePlan);
+
+        return (E) healthAgent;
+    }
+}

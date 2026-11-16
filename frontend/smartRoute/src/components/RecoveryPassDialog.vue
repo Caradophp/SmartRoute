@@ -1,14 +1,17 @@
 <script setup>
 import { FwbInput } from 'flowbite-vue';
 import Dialog from './Dialog.vue';
-import { inject, ref } from 'vue';
+import { inject, watch, ref, toRefs } from 'vue';
 import Toast from '@/utils/Toast.js';
 import axios from 'axios';
 
-const { show, close } = defineProps({
+const props = defineProps({
     show: Boolean,
-    close: Function
+    close: Function,
+    userId: String
 });
+
+const { show, userId } = toRefs(props);
 
 const showEmailInput = ref(true);
 const showNewPassForm = ref(false);
@@ -20,6 +23,26 @@ const confirmPass = ref('');
 
 const openLoader = inject("openLoader");
 const closeLoader = inject("closeLoader");
+
+const loadUserById = async () => {
+    openLoader();
+    try {
+        const response = await axios.get(`http://localhost:8080/login/${userId.value}`);
+
+        if (response.status !== 200) {
+            Toast.danger("Erro ao recuperar e-mail. Contate o suporte técnico");
+            return;
+        }
+
+        const data = await response.data;
+        userEmail.value = data.email;
+        showNewPassForm.value = true;
+        closeLoader();
+    } catch (error) {
+        Toast.error(error);
+        closeLoader();
+    }
+}
 
 const sendEmail = async () => {
     openLoader();
@@ -77,14 +100,14 @@ const changePass = async () => {
         Toast.info('Senha alterada com sucesso');
         showEmailInput.value = true;
         showNewPassForm.value = false;
-        close();
+        props.close();
     } catch (error) {
         Toast.danger(error.message)
     }
 }
 
 const buttonHandler = () => {
-    if (showEmailInput.value) {
+    if (showEmailInput.value && userId.value == null) {
         sendEmail();
     } else if (!showEmailInput.value && !showNewPassForm.value) {
         checkCode();
@@ -93,22 +116,28 @@ const buttonHandler = () => {
     }
 }
 
+watch(userId, (newUserId) => {
+    if (newUserId) {
+        loadUserById();
+    }
+});
+
 </script>
 
 <template>
     <Dialog v-if="show" title="Recuperação de senha" @close="close" @submit="buttonHandler">
         <form v-if="showEmailInput">
             <span>Informe seu e-mail para poder recuperar a senha</span><br><br>
-            <FwbInput autocomplete="off" placeholder="E-mail" v-model="userEmail" />
+            <FwbInput autocomplete="off" placeholder="E-mail" v-model="userEmail" :disabled="userId != null ? true : fal" />
         </form>
         <form v-if="!showEmailInput && !showNewPassForm">
             <span>Informe o código de verificação envia para seu e-mail</span><br><br>
             <FwbInput autocomplete="off" placeholder="Código" v-model="tipedCode"/>
         </form>
         <form v-if="showNewPassForm">
-            <span>Informe a nova senha abaixo</span><br><br>
-            <FwbInput autocomplete="off" placeholder="Senha" v-model="newPass" /><br>
-            <FwbInput autocomplete="off" placeholder="Confirmar Senha" v-model="confirmPass" />
+            <br><span>Informe a nova senha abaixo</span><br><br>
+            <FwbInput :type="'password'" autocomplete="off" placeholder="Senha" v-model="newPass" /><br>
+            <FwbInput :type="'password'" autocomplete="off" placeholder="Confirmar Senha" v-model="confirmPass" />
         </form>
     </Dialog>
 </template>

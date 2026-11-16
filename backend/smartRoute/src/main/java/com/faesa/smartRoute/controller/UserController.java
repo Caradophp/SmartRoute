@@ -1,11 +1,10 @@
 package com.faesa.smartRoute.controller;
 
-import com.faesa.smartRoute.dto.AppUserDto;
-import com.faesa.smartRoute.dto.UserRequestDto;
-import com.faesa.smartRoute.dto.UserResponseDto;
-import com.faesa.smartRoute.model.AppUser;
+import com.faesa.smartRoute.dto.request.UserRequestDto;
+import com.faesa.smartRoute.dto.response.UserResponseDto;
 import com.faesa.smartRoute.model.User;
 import com.faesa.smartRoute.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> register(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<Void> register(@RequestBody @Valid UserRequestDto userRequestDto) {
         userService.cadastrarUsuario(userRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -62,6 +61,20 @@ public class UserController {
                 .stream()
                 .map(this::convertToDto)
                 .toList();
+    }
+
+    @PatchMapping("/disable")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> disableUser(@RequestParam String email) {
+        userService.disableUser(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/enable")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> enableUser(@RequestParam String email) {
+        userService.enableUser(email);
+        return ResponseEntity.ok().build();
     }
 
     private UserResponseDto convertToDto(User user) {

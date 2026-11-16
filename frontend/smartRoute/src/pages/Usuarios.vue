@@ -30,6 +30,12 @@ const fiels = [
     {label: "Perfil", fieldType: "autocomplete", model: tipo, options: perfils, searchFields: searchFields}
 ]
 
+// Define botoes extras
+const extraButtons = [
+    {label: "Inativar usuário", event: () => disableUser(), color: 'red'},
+    {label: "Ativar usuário", event: () => enableUser(), color: 'green'}
+]
+
 // Cria JSON para enviar para o backend
 const json = () => JSON.stringify({
     nome: nome.value,
@@ -38,18 +44,55 @@ const json = () => JSON.stringify({
     perfil: tipo.value
 })
 
+// Define os valores dos dados no formulário na edição
 const setFormData = (data) => {
     nome.value = data.nome,
     email.value = data.email,
     cpf.value = data.cpf
+    perfils.value.forEach(element => {
+        if (element.id === data.userId) {
+            tipo.value = element;
+        }
+    });
 };
 
+// Função para desabilitar usuário
+const disableUser = async () => {
+    try {
+        const response = await apiClient.patch(`http://localhost:8080/users/disable?email=${encodeURIComponent(email.value)}`)
+
+        if (response.status !== 200) {
+            Toast.danger('Erro ao desativar usuário. Contate o suporte técnico.');
+            return;
+        }
+
+        Toast.info('Operação realizada com sucesso');
+    } catch (error) {
+        Toast.error(error)
+    }
+}
+
+// Funcão para habilitar usuário
+const enableUser = async () => {
+    try {
+        const response = await apiClient.patch(`http://localhost:8080/users/enable?email=${encodeURIComponent(email.value)}`)
+
+        if (response.status !== 200) {
+            Toast.danger('Erro ao ativar usuário. Contate o suporte técnico.');
+            return;
+        }
+
+        Toast.info('Operação realizada com sucesso');
+    } catch (error) {
+        Toast.error(error)
+    }
+}
 
 //Carrega dados do dropdown
 onMounted(() => {
     const getPerfils = async () => {
         try {
-            const response = await apiClient.get('http://localhost:8080/roles');
+            const response = await apiClient.get('http://localhost:8080/roles/listar');
 
             if (response.status !== 200)
                 Toast.danger('Erro desconhecido. Contate o suporte técnico');
@@ -67,5 +110,5 @@ onMounted(() => {
 </script>
 
 <template>
-    <CrudLayout :columns="columns" :form-fields="fiels" :json-data="json" :set-form-data="setFormData" url="users"/>
+    <CrudLayout :columns="columns" :form-fields="fiels" :json-data="json" :set-form-data="setFormData" url="users" :extra-buttons="extraButtons"/>
 </template>

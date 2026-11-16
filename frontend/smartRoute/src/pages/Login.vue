@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <main class="login-page">
     <section class="login-container">
 
@@ -120,11 +120,21 @@
 
     </section>
   </main>
+  <RecoveryPassDialog
+  :show="showRecoveryPassForm"
+  :close="closeModal"
+  :user-id="userId"
+/>
 </template>
 
+
 <script setup>
-import { ref } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+import RecoveryPassDialog from '@/components/RecoveryPassDialog.vue'
+import Toast from '@/utils/Toast'
 
 import logoSmartRoute from '@/assets/img/logo.png'
 import imagemRota from '@/assets/img/rota-medica.png'
@@ -136,61 +146,86 @@ const senha = ref('')
 const mostrarSenha = ref(false)
 const carregando = ref(false)
 
-/*
- * Mantenha aqui a mesma chamada de API que você já estava
- * utilizando no seu Login.vue caso ela seja diferente.
- */
+const showRecoveryPassForm = ref(false)
+const userId = ref(null)
+
+const openLoader = inject('openLoader', () => {})
+const closeLoader = inject('closeLoader', () => {})
+
 const login = async () => {
-  if (!email.value || !senha.value) {
+  if (!email.value || !senha.value || carregando.value) {
     return
   }
 
   carregando.value = true
+  openLoader()
 
   try {
-    const response = await fetch('http://localhost:8080/login', {
-      method: 'POST',
-
-      headers: {
-        'Content-Type': 'application/json'
-      },
-
-      body: JSON.stringify({
-        email: email.value,
-        senha: senha.value
-      })
+    const response = await axios.post('http://localhost:8080/login', {
+      email: email.value,
+      senha: senha.value
     })
 
-    if (!response.ok) {
-      throw new Error('E-mail ou senha inválidos')
+    if (response.status !== 200 || !response.data?.token) {
+      Toast.danger('Erro ao entrar. Verifique suas credenciais.')
+      return
     }
 
-    const data = await response.json()
+    localStorage.setItem('token', response.data.token)
 
-    if (data.token) {
-      localStorage.setItem('token', data.token)
-    }
-
-    await router.push('/usuarios')
-
+    Toast.info('Login realizado com sucesso!')
+    await router.push('/home')
   } catch (error) {
     console.error('Erro ao realizar login:', error)
-
-    alert('Não foi possível realizar o login. Verifique seu e-mail e senha.')
-
+    Toast.error(error)
   } finally {
     carregando.value = false
+    closeLoader()
   }
 }
 
 const recuperarSenha = () => {
-  /*
-   * Se você já possui uma rota específica para recuperação,
-   * troque "/recuperar-senha" pela rota existente.
-   */
-  router.push('/recuperar-senha')
+  showRecoveryPassForm.value = true
 }
+
+const closeModal = () => {
+  if (userId.value != null) {
+    localStorage.removeItem('token')
+    window.location.href = '/'
+  } else {
+    showRecoveryPassForm.value = false
+  }
+}
+
+onMounted(async () => {
+  const params = new URLSearchParams(window.location.search)
+
+  const user = params.get('user')
+  const expires = params.get('expires')
+  const sig = params.get('sig')
+
+  if (user === null) {
+    return
+  }
+
+  try {
+    const response = await axios.get('http://localhost:8080/login/is-valid', {
+      params: { user, expires, sig }
+    })
+
+    if (response.status !== 200) {
+      Toast.danger('Erro ao validar o link de recuperação.')
+      return
+    }
+
+    userId.value = user
+    showRecoveryPassForm.value = true
+  } catch (error) {
+    Toast.error(error)
+  }
+})
 </script>
+
 
 <style scoped>
 

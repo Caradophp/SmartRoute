@@ -4,6 +4,10 @@ import { FwbButton, FwbModal } from 'flowbite-vue'
 const props = defineProps({
     title: String,
     oper: 'inc' | 'alt' | 'con' | 'exc',
+    buttons: {
+        type: Array,
+        required: false
+    }
 });
 
 const emit = defineEmits(['close', 'submit'])
@@ -31,9 +35,11 @@ const submit = () => {
 </script>
 
 <template>
-    <fwb-modal :header-class="cssHeaderClass" @close="close">
+    <fwb-modal :header-class="cssHeaderClass" @close="close" persistent>
         <template #header>
-            {{ props.title }}
+            <div>
+                {{ props.title }}
+            </div>
         </template>
         <template #body>
             <div class="body">
@@ -42,6 +48,9 @@ const submit = () => {
         </template>
         <template #footer>
             <div class="footer">
+                <div v-for="button in props.buttons">
+                    <FwbButton @click="button.event" :color="button.color">{{ button.label }}</FwbButton>
+                </div>
                 <fwb-button color="red" @click="close"><i class="fa fa-close"></i>Fechar</fwb-button>
                 <fwb-button @click="submit">Prosseguir</fwb-button>
             </div>

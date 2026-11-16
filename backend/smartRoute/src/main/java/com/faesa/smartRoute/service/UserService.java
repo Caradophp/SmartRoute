@@ -2,12 +2,13 @@ package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.AppUserDto;
 import com.faesa.smartRoute.dto.ChangePassDto;
-import com.faesa.smartRoute.dto.UserRequestDto;
+import com.faesa.smartRoute.dto.request.UserRequestDto;
 import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.AppUser;
 import com.faesa.smartRoute.model.Role;
 import com.faesa.smartRoute.model.User;
+import com.faesa.smartRoute.model.enums.UserStatus;
 import com.faesa.smartRoute.repository.AppUserRepository;
 import com.faesa.smartRoute.repository.RoleRepository;
 import com.faesa.smartRoute.repository.UserRepository;
@@ -26,6 +27,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.faesa.smartRoute.util.Util.getCurrentUser;
 
 @Service
 public class UserService implements UserDetailsService, Aplicativo {
@@ -75,7 +78,7 @@ public class UserService implements UserDetailsService, Aplicativo {
         appUser.setNome(appUserDto.nome());
         appUser.setEmail(appUserDto.email());
         appUser.setCpf(appUserDto.cpf());
-        appUser.setTelefone(appUserDto.telefone());
+        appUser.setTelefone(appUserDto.telefone().replaceAll("[()-]", "").trim());
         appUser.setSenha(encrypter.encriptar(appUserDto.senha()));
         appUser.setRole(roleRepository.findDefaultRole());
         appUserRepository.save(appUser);
@@ -166,6 +169,41 @@ public class UserService implements UserDetailsService, Aplicativo {
         }
 
         return userRepository.search(param);
+    }
+
+    @Transactional
+    public void disableUser(String email) {
+        User user = userRepository.findByEmail(email.replace("\"", ""))
+                .orElseThrow(RecordNotFoundException::new);
+
+        if (user.getId().equals(getCurrentUser().getId())) {
+            throw new BusinessException("Usuário não pode desativar seu próprio usuário");
+        }
+
+        user.setStatus(UserStatus.DESABLE);
+        userRepository.save(user);
+    }
+
+    public void enableUser(String email) {
+        User user = userRepository.findByEmail(email.replace("\"", ""))
+                .orElseThrow(RecordNotFoundException::new);
+
+        if (user.getId().equals(getCurrentUser().getId())) {
+            throw new BusinessException("Usuário não pode desativar seu próprio usuário");
+        }
+
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+    }
+
+    public boolean isAplicativo(User user) {
+        Optional<User> userFound = appUserRepository.findById(user.getId());
+
+        if (userFound.isPresent()) {
+            return true;
+        }
+
+        return false;
     }
 
     private void sendEmailToFirstAccess(User user, String base64PasswordHash) {
