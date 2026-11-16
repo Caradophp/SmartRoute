@@ -7,6 +7,8 @@ import { onMounted, ref } from 'vue';
 const telefone = ref('');
 const agent = ref(null);
 const agents = ref([]);
+const route = ref(null);
+const routes = ref([]);
 
 const columns = [
     { data: 'userName', title: 'Agênte' },
@@ -16,12 +18,14 @@ const columns = [
 
 const fields = [
     { label: 'Telefone', fieldType: 'text', model: telefone },
-    { label: 'Agênte', fieldType: 'autocomplete', model: agent, options: agents, searchFields: ['nome']}
+    { label: 'Agênte', fieldType: 'autocomplete', model: agent, options: agents, searchFields: ['nome']},
+    { label: 'Rota', fieldType: 'autocomplete', model: route, options: routes, searchFields: ['nome']},
 ]
 
 const jsonData = () => JSON.stringify({
     telefone: telefone.value,
-    userId: agent.value.id
+    userId: agent.value.id,
+    routeId: route.value.id
 });
 
 const setFormData = (data) => {
@@ -49,7 +53,22 @@ onMounted(() => {
         }
     }
 
+    const getRoutes = async () => {
+        try {
+            const response = await apiClient.get('http://localhost:8080/route-plans/listar');
+
+            if (response.status !== 200)
+                Toast.danger('Erro desconhecido. Contate o suporte técnico');
+
+            routes.value = await response.data;
+
+        } catch (error) {
+            Toast.error(error);
+        }
+    }
+
     getAgents();
+    getRoutes();
 });
 
 </script>

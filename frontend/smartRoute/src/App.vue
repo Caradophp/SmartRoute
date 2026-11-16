@@ -97,13 +97,14 @@ const sendAbulance = async () => {
       userphonenumber: emergencia.value.userphonenumber
     });
 
-    if (response.status !== 201) {
+    if (response.status !== 200) {
       Toast.danger('Erro desconhecido. Contate o suporte técnico');
       return;
     }
 
     Toast.success('Ambulância Acionada')
     showEmergencyModal.value = false;
+    showQuestion.value = false;
   } catch (error) {
     Toast.error(error);
   }

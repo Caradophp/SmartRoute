@@ -132,20 +132,19 @@
 import { inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-
+import { useUserStore } from '@/utils/User'
 import RecoveryPassDialog from '@/components/RecoveryPassDialog.vue'
 import Toast from '@/utils/Toast'
-
 import logoSmartRoute from '@/assets/img/logo.png'
 import imagemRota from '@/assets/img/rota-medica.png'
 
 const router = useRouter()
+const store = useUserStore()
 
 const email = ref('')
 const senha = ref('')
 const mostrarSenha = ref(false)
 const carregando = ref(false)
-
 const showRecoveryPassForm = ref(false)
 const userId = ref(null)
 
@@ -153,13 +152,10 @@ const openLoader = inject('openLoader', () => {})
 const closeLoader = inject('closeLoader', () => {})
 
 const login = async () => {
-  if (!email.value || !senha.value || carregando.value) {
-    return
-  }
+  if (!email.value || !senha.value || carregando.value) return
 
   carregando.value = true
   openLoader()
-
   try {
     const response = await axios.post('http://localhost:8080/login', {
       email: email.value,
@@ -172,6 +168,11 @@ const login = async () => {
     }
 
     localStorage.setItem('token', response.data.token)
+    store.setUser({
+      id: response.data.id,
+      nome: response.data.nome,
+      email: response.data.email
+    })
 
     Toast.info('Login realizado com sucesso!')
     await router.push('/home')
@@ -199,25 +200,20 @@ const closeModal = () => {
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.search)
-
   const user = params.get('user')
   const expires = params.get('expires')
   const sig = params.get('sig')
 
-  if (user === null) {
-    return
-  }
+  if (user === null) return
 
   try {
     const response = await axios.get('http://localhost:8080/login/is-valid', {
       params: { user, expires, sig }
     })
-
     if (response.status !== 200) {
       Toast.danger('Erro ao validar o link de recuperação.')
       return
     }
-
     userId.value = user
     showRecoveryPassForm.value = true
   } catch (error) {
