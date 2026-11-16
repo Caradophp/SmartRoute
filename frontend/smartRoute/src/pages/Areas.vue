@@ -8,7 +8,18 @@ const tipo = ref('')
 
 const columns = [
   { data: 'nomeTerritorio', title: 'Nome do território' },
-  { data: 'type', title: 'Tipo' }
+  {
+    data: 'type',
+    title: 'Tipo',
+    render: (value) => {
+      const tipos = {
+        URBAN: 'Urbana',
+        RURAL: 'Rural'
+      }
+
+      return tipos[value] ?? value ?? '—'
+    }
+  }
 ]
 
 const fields = [
