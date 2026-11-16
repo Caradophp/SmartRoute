@@ -32,7 +32,7 @@ const fields = [
 
 const jsonData = () => JSON.stringify({
     placa: placa.value,
-    tipo: tipo.value,
+    status: tipo.value,
     driverId: driver.value.id,
     healthAgentId: agent.value.id
 });
@@ -78,5 +78,5 @@ onMounted(() => {
 </script>
 
 <template>
-    <CrudLayout :url="'ambulances'" :columns="columns" :form-fields="fields"/>
+    <CrudLayout :url="'ambulances'" :columns="columns" :form-fields="fields" :json-data="jsonData" :set-form-data="setFormData"/>
 </template>

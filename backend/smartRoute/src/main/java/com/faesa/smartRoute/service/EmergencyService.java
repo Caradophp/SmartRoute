@@ -7,6 +7,7 @@ import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Ambulance;
 import com.faesa.smartRoute.model.AppUser;
 import com.faesa.smartRoute.model.Emergency;
+import com.faesa.smartRoute.model.enums.AmbulanceStaus;
 import com.faesa.smartRoute.repository.EmergencyRepository;
 import com.faesa.smartRoute.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,8 @@ public class EmergencyService {
         }
 
         Ambulance ambulance = ambulanceService.callAmbulande();
+        ambulance.setStatus(AmbulanceStaus.IN_MOTION);
+        ambulanceService.update(String.valueOf(ambulance.getId()), ambulanceService.convertToDto(ambulance, AmbulanceDto.class));
 
         emergency.getAmbulance().add(ambulance);
         emergency.setAttended(Boolean.TRUE);
