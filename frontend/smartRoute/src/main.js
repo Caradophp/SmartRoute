@@ -1,6 +1,8 @@
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import Login from './pages/Login.vue'
+import Home from './pages/Home.vue'
 import { createWebHistory, createRouter } from 'vue-router'
 import Usuarios from './pages/Usuarios.vue'
 import Ambulancias from './pages/Ambulancias.vue'
@@ -20,38 +22,42 @@ const routes = [
         component: Login,
     },
     {
+        path: '/home',
+        component: Home,
+    },
+    {
         path: '/usuarios',
-        component: Usuarios
+        component: Usuarios,
     },
     {
         path: '/ambulancias',
-        component: Ambulancias
+        component: Ambulancias,
     },
     {
         path: '/motoritas',
-        component: Motoristas
+        component: Motoristas,
     },
     {
         path: '/agentes',
-        component: HealthAgent
+        component: HealthAgent,
     },
     {
         path: '/unidades',
-        component: HealthUnit
+        component: HealthUnit,
     },
     {
         path: '/papeis',
-        component: Roles
-    }
+        component: Roles,
+    },
 ]
 
 export const router = createRouter({
     history: createWebHistory(),
     routes,
-});
+})
 
 const app = createApp(App)
-const pinia = createPinia();
+const pinia = createPinia()
 
 app.use(router)
 app.use(pinia)

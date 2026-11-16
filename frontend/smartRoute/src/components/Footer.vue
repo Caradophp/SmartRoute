@@ -23,17 +23,14 @@ addEventListener("DOMContentLoaded", () => {
 
 <style scoped>
 .footer {
-    height: 100px;
-    width: 100vw;
+    min-height: 80px;
+    width: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: rgb(83, 83, 83);
+    padding: 20px;
+    background-color: #0b2f68;
     color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    text-align: center;
 }
 </style>
