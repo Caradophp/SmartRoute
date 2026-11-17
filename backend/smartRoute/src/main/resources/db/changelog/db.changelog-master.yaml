@@ -25,6 +25,8 @@ databaseChangeLog:
       file: db/changelog/11-add-vulnerability-id-in-function.sql
   - include:
       file: db/changelog/12-corrige-fk.sql
+  - include:
+      file: db/changelog/13-create-vehicle-problem-column.sql
   - changeSet:
       id: 1
       author: nome

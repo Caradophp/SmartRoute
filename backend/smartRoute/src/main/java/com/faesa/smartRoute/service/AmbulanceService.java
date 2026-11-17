@@ -3,6 +3,7 @@ package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.AmbulanceDto;
 import com.faesa.smartRoute.dto.response.AmbulanceResponseDto;
+import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Ambulance;
 import com.faesa.smartRoute.model.Driver;
@@ -16,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AmbulanceService extends BaseService {
@@ -86,6 +84,27 @@ public class AmbulanceService extends BaseService {
         }
 
         ambulanceRepository.delete(ambulanceOptional.get());
+    }
+
+    @Transactional
+    public void regiterDefectiveVehicle(String id, String vehicleProblem) {
+        UUID uuid = stringToUuid(id);
+
+        if (Objects.isNull(uuid)) {
+            throw new BusinessException("ID da ambulância não pode ser nulo");
+        }
+
+        Optional<Ambulance> ambulanceOptional = ambulanceRepository.findById(uuid);
+
+        if (ambulanceOptional.isEmpty()) {
+            throw new RecordNotFoundException("Ambulância informada não encontrada");
+        }
+
+        Ambulance ambulance = ambulanceOptional.get();
+        ambulance.setStatus(AmbulanceStaus.UNDER_MAINTENANCE);
+        ambulance.setVehicleProblem(vehicleProblem);
+
+        ambulanceRepository.save(ambulance);
     }
 
     @Override

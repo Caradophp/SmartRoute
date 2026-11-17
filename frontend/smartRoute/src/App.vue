@@ -11,6 +11,8 @@ import { LMap, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css'
 import apiClient from './utils/Axios.js';
 import ExtendSession from './components/ExtendSession.vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from './utils/User.js';
 
 const showLoader = ref(false);
 
@@ -19,6 +21,9 @@ const closeLoader = () => showLoader.value = false;
 const showEmergencyModal = ref(false);
 const showQuestion = ref(false);
 const emergencia = ref(null)
+
+const router = useRouter();
+const store = useUserStore();
 
 provide("openLoader", openLoader)
 provide("closeLoader", closeLoader)
@@ -118,6 +123,22 @@ const close = () => {
   showQuestion.value = false;
   showEmergencyModal.value = false;
 }
+
+onMounted( async () => {
+  const response = await apiClient.get('http://localhost:8080/users/session-attributes');
+
+  if (response.status != 200) {
+    await router.push('/login');
+  } else {
+    const data = await response.data;
+    store.setUser({
+      id: data.id,
+      nome: data.nome,
+      email: data.email
+    })
+  }
+
+});
 
 </script>
 

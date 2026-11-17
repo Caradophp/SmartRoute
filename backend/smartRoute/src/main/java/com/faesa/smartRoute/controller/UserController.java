@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -75,6 +76,11 @@ public class UserController {
     public ResponseEntity<Void> enableUser(@RequestParam String email) {
         userService.enableUser(email);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/session-attributes")
+    public ResponseEntity<Map<String, String>> getUserSessionAttributes() {
+        return ResponseEntity.ok(userService.getUserSessionAttributes());
     }
 
     private UserResponseDto convertToDto(User user) {

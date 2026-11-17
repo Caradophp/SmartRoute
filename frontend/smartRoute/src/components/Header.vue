@@ -1,5 +1,6 @@
 
 <script setup>
+import { useUserStore } from '@/utils/User'
 import logo from '../assets/img/logo.png'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -30,6 +31,9 @@ const links = [
   { nome: 'Agentes de Saúde', caminho: '/agentes', icone: '♧' },
   { nome: 'Áreas', caminho: '/areas', icone: '▤' }
 ]
+
+const store = useUserStore();
+
 </script>
 
 <template>
@@ -81,8 +85,8 @@ const links = [
     </nav>
 
     <div class="header-user">
-      <span class="user-avatar">Y</span>
-      <span class="user-name">Yasmim</span>
+      <span class="user-avatar">{{ store.user.nome != null ? String(store.user.nome).substring(0, 1).toUpperCase() : 'U' }}</span>
+      <span class="user-name">{{ store.user.nome ?? 'Não informado'}}</span>
     </div>
   </header>
 </template>

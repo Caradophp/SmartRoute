@@ -1,8 +1,9 @@
 
 <script setup>
+import { useUserStore } from '@/utils/User'
 import { computed, ref } from 'vue'
 
-const nomeUsuario = ref('Yasmim')
+const store = useUserStore();
 
 const saudacao = computed(() => {
   const hora = new Date().getHours()
@@ -21,7 +22,7 @@ const saudacao = computed(() => {
           PAINEL ADMINISTRATIVO
         </span>
 
-        <h1>{{ saudacao }}, {{ nomeUsuario }}! 👋</h1>
+        <h1>{{ saudacao }}, {{ store.user.nome }}! 👋</h1>
 
         <p>
           Bem-vinda ao SmartRoute. Gerencie ambulâncias,

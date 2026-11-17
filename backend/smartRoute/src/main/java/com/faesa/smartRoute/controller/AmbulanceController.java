@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ambulances")
@@ -20,7 +21,7 @@ public class AmbulanceController {
     private AmbulanceService ambulanceService;
 
     @GetMapping("/listar")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('DRIVER')")
     public ResponseEntity<List<AmbulanceResponseDto>> findAll() {
         List<AmbulanceResponseDto> all = ambulanceService.findAll();
         return ResponseEntity.ok(all);
@@ -46,6 +47,13 @@ public class AmbulanceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         ambulanceService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/defective")
+    @PreAuthorize("hasRole('DRIVER')")
+    public ResponseEntity<Void> regiterDefectiveVehicle(@RequestBody Map<String, String> body) {
+        ambulanceService.regiterDefectiveVehicle(body.get("id"), body.get("vehicleProblem"));
         return ResponseEntity.ok().build();
     }
 }
