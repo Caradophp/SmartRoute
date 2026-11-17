@@ -94,9 +94,9 @@ const logout = () => {
 
     <div class="header-user">
       <span class="user-avatar">{{ store.user?.nome != null ? String(store.user.nome).substring(0, 1).toUpperCase() : 'U' }}</span>
-      <FwbDropdown align-to-end :text="store.user?.nome ?? 'Não informado'" color="white">
-        <nav class="py-2 text-sm text-gray-700 dark:text-gray-200">
-          <FwbButton color="white" @click="logout"><i class="fa-solid fa-right-from-bracket"></i>Sair</FwbButton>
+      <FwbDropdown :text="store.user?.nome ?? 'Não informado'" color="white">
+        <nav class="py-2 text-sm text-gray-700 dark:text-gray-200" style="min-width: 150px;">
+          <FwbButton color="white" @click="logout"><i class="fa-solid fa-right-from-bracket w-full"></i>Sair</FwbButton>
         </nav>
       </FwbDropdown>
     </div>
