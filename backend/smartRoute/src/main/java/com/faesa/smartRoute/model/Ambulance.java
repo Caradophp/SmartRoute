@@ -36,6 +36,9 @@ public class Ambulance extends com.faesa.smartRoute.model.Entity {
     @JoinColumn(name = "agent_id", nullable = false)
     private HealthAgent healthAgent;
 
+    @Column(name = "vehicle_problem", columnDefinition = "TEXT")
+    private String vehicleProblem;
+
     @PrePersist
     private void setDefaultValues() {
         if (Objects.isNull(status)) {

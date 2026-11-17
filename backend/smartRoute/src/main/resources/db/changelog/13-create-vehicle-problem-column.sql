@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS ambulance
+ADD COLUMN IF NOT EXISTS vehicle_problem TEXT;

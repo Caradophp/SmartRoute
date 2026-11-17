@@ -1,8 +1,10 @@
 
 <script setup>
+import { useUserStore } from '@/utils/User'
 import logo from '../assets/img/logo.png'
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { FwbButton, FwbDropdown } from 'flowbite-vue'
 
 const route = useRoute()
 
@@ -30,6 +32,16 @@ const links = [
   { nome: 'Agentes de Saúde', caminho: '/agentes', icone: '♧' },
   { nome: 'Áreas', caminho: '/areas', icone: '▤' }
 ]
+
+const store = useUserStore();
+const router = useRouter();
+
+const logout = () => {
+  localStorage.removeItem("token");
+  store.logout();
+  router.push('/login');
+}
+
 </script>
 
 <template>
@@ -81,8 +93,12 @@ const links = [
     </nav>
 
     <div class="header-user">
-      <span class="user-avatar">Y</span>
-      <span class="user-name">Yasmim</span>
+      <span class="user-avatar">{{ store.user?.nome != null ? String(store.user.nome).substring(0, 1).toUpperCase() : 'U' }}</span>
+      <FwbDropdown :text="store.user?.nome ?? 'Não informado'" color="white">
+        <nav class="py-2 text-sm text-gray-700 dark:text-gray-200" style="min-width: 150px;">
+          <FwbButton color="white" @click="logout"><i class="fa-solid fa-right-from-bracket w-full"></i>Sair</FwbButton>
+        </nav>
+      </FwbDropdown>
     </div>
   </header>
 </template>

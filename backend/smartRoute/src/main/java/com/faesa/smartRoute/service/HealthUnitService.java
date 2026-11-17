@@ -4,10 +4,12 @@ import com.faesa.smartRoute.dto.HealthUnitDto;
 import com.faesa.smartRoute.dto.RouteDto;
 import com.faesa.smartRoute.dto.response.NearesHealthPointResponseDto;
 import com.faesa.smartRoute.dto.response.OsrmRouteResponseDto;
+import com.faesa.smartRoute.exceptions.BusinessException;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.HealthUnit;
 import com.faesa.smartRoute.model.enums.HealthUnitType;
 import com.faesa.smartRoute.repository.HealthUnitRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,7 +92,10 @@ public class HealthUnitService extends BaseService {
         final AtomicReference<NearesHealthPointResponseDto>[] bestResponse = new AtomicReference[]{new AtomicReference<>()};
         final double[] shortestRouteDistance = {Double.MAX_VALUE};
 
-        candidates.forEach(candidate -> {
+        boolean found = false;
+        int candidateIdx = 0;
+        while (!found) {
+            HealthUnit candidate = candidates.get(candidateIdx);
             try {
 
                 OsrmRouteResponseDto.OsrmRoute route = routingService.calculateRoute(
@@ -122,12 +127,21 @@ public class HealthUnitService extends BaseService {
                             healthPointDTO,
                             routeDTO
                     ));
+
+                    found = true;
+                } else {
+                    candidateIdx++;
                 }
 
             } catch (Exception e) {
-                throw e;
+                String message = e.getMessage();
+                if (message.contains("400 Bad Request")) {
+                    throw new BusinessException("Não foi possível desenhar uma rota entre esses 2 pontos");
+                } else {
+                    throw e;
+                }
             }
-        });
+        }
 
         if (Objects.isNull(bestResponse[0])) {
             throw new RecordNotFoundException("Não foi possivel uma oa opção para sua posição");

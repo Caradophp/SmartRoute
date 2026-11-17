@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.faesa.smartRoute.util.Util.getCurrentUser;
 
@@ -119,6 +116,15 @@ public class UserService implements UserDetailsService, Aplicativo {
         User user = userOptional.get();
         user.setSenha(encrypter.encriptar(senha));
         userRepository.save(user);
+    }
+
+    public Map<String, String> getUserSessionAttributes() {
+        Map<String, String> attributes = new HashMap<>();
+        User currentUser = getCurrentUser();
+        attributes.put("id", String.valueOf(currentUser.getId()));
+        attributes.put("nome", currentUser.getNome());
+        attributes.put("email", currentUser.getEmail());
+        return attributes;
     }
 
     public void save(User user) {
