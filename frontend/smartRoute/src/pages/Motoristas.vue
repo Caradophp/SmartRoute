@@ -10,7 +10,7 @@ const licence = ref('');
 
 const columns = [
     { data: 'driverLicenceLevel', title: 'Tipo de Carteira' },
-    { data: 'driverName', title: 'Motorista' },
+    { data: 'nome', title: 'Motorista' },
     { data: 'driverEmail', title: 'E-mail' }
 ]
 

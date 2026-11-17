@@ -120,26 +120,8 @@ const exc = async () => {
     }
 }
 
-const search = async () => {
-
-    if (searchParam.value === '') {
-        grid.value.reload();
-        return;
-    }
-
-    try {
-        const response = await apiClient.get(`http://localhost:8080/users/search/${searchParam.value}`)
-
-        if (response.status !== 200) {
-            Toast.danger('Erro desconhecido.Contate o suporte técnico');
-            return;
-        }
-
-        const data = response.data;
-        grid.value.search(data);
-    } catch (error) {
-        Toast.error(error)
-    }
+const search = () => {
+    grid.value?.search(searchParam.value);
 }
 
 const eventhandler = () => {

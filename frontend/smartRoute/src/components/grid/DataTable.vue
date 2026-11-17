@@ -4,10 +4,11 @@ import apiClient from '@/utils/Axios'
 import Toast from '@/utils/Toast'
 
 const formatCell = (value, field) => {
-  if (field === 'type') {
+    if (field === 'tipo') {
     const translations = {
-      URBAN: 'Urbana',
-      RURAL: 'Rural'
+      CLINIC: 'Clínica',
+      HEALTH_CENTER: 'Centro de Saúde',
+      HOSPITAL: 'Hospital'
     }
 
     return translations[value] ?? value ?? '—'
@@ -24,6 +25,7 @@ const props = defineProps({
 })
 
 const tableData = ref([])
+const searchTerm = ref('')
 const loading = ref(false)
 const error = ref(null)
 const currentPage = ref(1)
@@ -32,7 +34,21 @@ const sortColumn = ref(null)
 const sortDirection = ref('asc')
 
 const sortedData = computed(() => {
-  const data = [...tableData.value]
+  const term = searchTerm.value.trim().toLocaleLowerCase('pt-BR')
+
+  const data = tableData.value.filter(row => {
+    if (!term) return true
+
+    return props.columns.some(column => {
+      if (!column.data) return false
+
+      const value = formatCell(row[column.data], column.data)
+
+      return String(value ?? '')
+        .toLocaleLowerCase('pt-BR')
+        .includes(term)
+    })
+  })
   if (!sortColumn.value) return data
   return data.sort((a, b) => {
     const valueA = a[sortColumn.value]
@@ -96,6 +112,11 @@ const loadData = async () => {
   }
 }
 
+const search = (term) => {
+  searchTerm.value = String(term ?? '')
+  currentPage.value = 1
+}
+
 const setExternalData = (dataArray) => {
   tableData.value = Array.isArray(dataArray) ? dataArray : []
   currentPage.value = 1
@@ -103,7 +124,11 @@ const setExternalData = (dataArray) => {
 }
 
 onMounted(loadData)
-defineExpose({ reload: loadData, search: setExternalData })
+defineExpose({
+  reload: loadData,
+  search,
+  setExternalData
+})
 </script>
 
 <template>

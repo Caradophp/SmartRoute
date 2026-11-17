@@ -4,7 +4,7 @@ import apiClient from '@/utils/Axios';
 import Toast from '@/utils/Toast';
 import { onMounted, ref } from 'vue';
 
-const placa = ref();
+const placa = ref('');
 const tipo = ref('');
 const agent = ref(null);
 const agents = ref([]);
@@ -24,7 +24,7 @@ const tipoOptions = [
 ];
 
 const fields = [
-    { label: 'Placa', fieldType: 'number', model: placa },
+    { label: 'Placa', fieldType: 'text', model: placa },
     { label: 'Situação', fieldType: 'select', model: tipo, options: tipoOptions },
     { label: 'Motorista', fieldType: 'autocomplete', model: driver, options: drivers, searchField: ['nome'] },
     { label: 'Agênte', fieldType: 'autocomplete', model: agent, options: agents, searchField: ['nome'] }
