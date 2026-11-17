@@ -8,12 +8,15 @@ const route = useRoute()
 
 const cadastrosAberto = ref(false)
 
+
 const cadastros = [
   { nome: 'Usuários', caminho: '/usuarios' },
   { nome: 'Motoristas', caminho: '/motoristas' },
   { nome: 'Unidades de Saúde', caminho: '/unidades' },
+  { nome: 'Planos de Rota', caminho: '/planos' },
   { nome: 'Perfis', caminho: '/papeis' }
 ]
+
 
 const cadastroAtivo = computed(() =>
   cadastros.some(item => item.caminho === route.path)

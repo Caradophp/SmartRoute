@@ -3,19 +3,51 @@ import { computed, onMounted, ref, watch } from 'vue'
 import apiClient from '@/utils/Axios'
 import Toast from '@/utils/Toast'
 
+
 const formatCell = (value, field) => {
-    if (field === 'tipo') {
-    const translations = {
-      CLINIC: 'Clínica',
-      HEALTH_CENTER: 'Centro de Saúde',
-      HOSPITAL: 'Hospital'
+    if (field === 'placa') {
+        return String(value ?? '—').toUpperCase();
     }
 
-    return translations[value] ?? value ?? '—'
-  }
+    if (field === 'tipo') {
+        const translations = {
+            CLINIC: 'Clínica',
+            HEALTH_CENTER: 'Centro de Saúde',
+            HOSPITAL: 'Hospital'
+        };
 
-  return value ?? '—'
-}
+        return translations[value] ?? value ?? '—';
+    }
+
+    if (field === 'status') {
+        const translations = {
+            // Status já existentes
+            ACTIVE: 'Ativo',
+            IN_ACTION: 'Em ação',
+            STOPED: 'Parado',
+            CANCELLED: 'Cancelado',
+
+            // Status das ambulâncias
+            IN_RESCUE: 'Em resgate',
+            WAITING: 'Em espera',
+            UNDER_MAINTENANCE: 'Em manutenção',
+            IN_MOTION: 'Em movimento'
+        };
+
+        return translations[value] ?? value ?? '—';
+    }
+
+    if (field === 'data' && typeof value === 'string') {
+        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+        if (match) {
+            return `${match[3]}/${match[2]}/${match[1]}`;
+        }
+    }
+
+    return value ?? '—';
+};
+
 
 const props = defineProps({
   columns: { type: Array, required: true },

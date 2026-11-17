@@ -1,6 +1,8 @@
+
 package com.faesa.smartRoute.controller;
 
 import com.faesa.smartRoute.dto.AmbulanceDto;
+import com.faesa.smartRoute.dto.response.AmbulanceResponseDto;
 import com.faesa.smartRoute.service.AmbulanceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,8 @@ public class AmbulanceController {
 
     @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AmbulanceDto>> findAll() {
-        List<AmbulanceDto> all = ambulanceService.findAll();
+    public ResponseEntity<List<AmbulanceResponseDto>> findAll() {
+        List<AmbulanceResponseDto> all = ambulanceService.findAll();
         return ResponseEntity.ok(all);
     }
 
@@ -33,7 +35,9 @@ public class AmbulanceController {
 
     @PutMapping("/alter/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody @Valid AmbulanceDto ambulanceDto) {
+    public ResponseEntity<Void> update(
+            @PathVariable String id,
+            @RequestBody @Valid AmbulanceDto ambulanceDto) {
         ambulanceService.update(id, ambulanceDto);
         return ResponseEntity.ok().build();
     }

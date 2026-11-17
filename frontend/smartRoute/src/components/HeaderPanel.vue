@@ -188,3 +188,4 @@ const emit = defineEmits(['update:inputSearch'])
   }
 }
 </style>
+    

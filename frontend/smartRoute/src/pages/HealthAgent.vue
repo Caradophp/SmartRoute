@@ -11,7 +11,7 @@ const route = ref(null);
 const routes = ref([]);
 
 const columns = [
-    { data: 'userName', title: 'Agênte' },
+    { data: 'nome', title: 'Agente' },
     { data: 'userEmail', title: 'E-mail' },
     { data: 'telefone', title: 'Contato' }
 ]
