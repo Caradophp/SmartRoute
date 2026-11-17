@@ -85,8 +85,8 @@ const store = useUserStore();
     </nav>
 
     <div class="header-user">
-      <span class="user-avatar">{{ store.user.nome != null ? String(store.user.nome).substring(0, 1).toUpperCase() : 'U' }}</span>
-      <span class="user-name">{{ store.user.nome ?? 'Não informado'}}</span>
+      <span class="user-avatar">{{ store.user?.nome != null ? String(store.user.nome).substring(0, 1).toUpperCase() : 'U' }}</span>
+      <span class="user-name">{{ store.user?.nome ?? 'Não informado'}}</span>
     </div>
   </header>
 </template>
