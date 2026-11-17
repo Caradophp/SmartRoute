@@ -28,7 +28,7 @@ const jsonData = () => JSON.stringify({
 const setFormData = (data) => {
     nome.value = data.nomeTerritorio,
     tipo.value = data.type
-} 
+}
 
 </script>
 

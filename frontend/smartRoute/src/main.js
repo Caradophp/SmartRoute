@@ -1,3 +1,4 @@
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import Login from './pages/Login.vue'
@@ -9,11 +10,12 @@ import Motoristas from './pages/Motoristas.vue'
 import HealthAgent from './pages/HealthAgent.vue'
 import HealthUnit from './pages/HealthUnit.vue'
 import Roles from './pages/Roles.vue'
-import { createPinia } from 'pinia'
+import Areas from './pages/Areas.vue'
 import Territorio from './pages/Territorio.vue'
 import Vulnerabilidades from './pages/Vulnerabilidades.vue'
 import HealthService from './pages/HealthService.vue'
 import RoutePlan from './pages/RoutePlan.vue'
+import { createPinia } from 'pinia'
 
 const routes = [
     {
@@ -26,57 +28,65 @@ const routes = [
     },
     {
         path: '/home',
-        component: Home
+        component: Home,
     },
     {
         path: '/usuarios',
-        component: Usuarios
+        component: Usuarios,
     },
     {
         path: '/ambulancias',
-        component: Ambulancias
+        component: Ambulancias,
+    },
+    {
+        path: '/motoristas',
+        component: Motoristas,
     },
     {
         path: '/motoritas',
-        component: Motoristas
+        redirect: '/motoristas',
     },
     {
         path: '/agentes',
-        component: HealthAgent
+        component: HealthAgent,
     },
     {
         path: '/unidades',
-        component: HealthUnit
+        component: HealthUnit,
     },
     {
         path: '/papeis',
-        component: Roles
+        component: Roles,
+    },
+    {
+        path: '/areas',
+        component: Areas,
     },
     {
         path: '/territorios',
-        component: Territorio
+        component: Territorio,
     },
     {
         path: '/vulnerabilidades',
-        component: Vulnerabilidades
+        component: Vulnerabilidades,
     },
     {
         path: '/servicos',
-        component: HealthService
+        component: HealthService,
     },
     {
         path: '/planos',
-        component: RoutePlan
-    }
+        component: RoutePlan,
+    },
 ]
 
 export const router = createRouter({
     history: createWebHistory(),
     routes,
-});
+})
 
 const app = createApp(App)
-const pinia = createPinia();
+const pinia = createPinia()
 
 app.use(router)
 app.use(pinia)

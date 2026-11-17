@@ -19,18 +19,28 @@ export default class Toast {
         toast(message, {'type': 'error'})
     }
 
-    static error(erro) {
-        if (!erro.response) {
-            this.danger(erro)
+        static error(erro) {
+        if (!erro?.response) {
+            this.danger(
+                'Não foi possível conectar ao servidor. Tente novamente mais tarde.'
+            );
             return;
         }
+
         const data = erro.response.data;
-        if (data.info) {
-            this.info(data.info)
-        } else if (data.aviso) {
-            this.warning(data.aviso)
+
+        if (data?.info) {
+            this.info(data.info);
+        } else if (data?.aviso) {
+            this.warning(data.aviso);
         } else {
-            toast(data.erro, {'type': 'error'})   
+            const mensagem =
+                data?.erro ||
+                data?.message ||
+                'Ocorreu um erro inesperado. Tente novamente.';
+
+            this.danger(mensagem);
         }
     }
+
 }

@@ -190,8 +190,16 @@ const close = () => {
 
 <style scoped>
 .main-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.main-container > :deep(main) {
+  flex: 1 0 auto;
+  min-width: 0;
 }
 .map-container {
   width: 100%;

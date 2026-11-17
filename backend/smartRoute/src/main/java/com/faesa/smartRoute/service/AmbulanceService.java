@@ -1,6 +1,8 @@
+
 package com.faesa.smartRoute.service;
 
 import com.faesa.smartRoute.dto.AmbulanceDto;
+import com.faesa.smartRoute.dto.response.AmbulanceResponseDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Ambulance;
 import com.faesa.smartRoute.model.Driver;
@@ -36,12 +38,23 @@ public class AmbulanceService extends BaseService {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(cb.equal(root.get("status"), AmbulanceStaus.WAITING));
             return cb.and(predicates);
-        }).stream().findFirst().orElseThrow(() -> new RecordNotFoundException("Sem ambulâncias disponiveis no momento.", true));
+        }).stream().findFirst().orElseThrow(
+                () -> new RecordNotFoundException(
+                        "Sem ambulâncias disponíveis no momento.", true
+                )
+        );
     }
 
-    public List<AmbulanceDto> findAll() {
+    public List<AmbulanceResponseDto> findAll() {
         return ambulanceRepository.findAll()
-                .stream().map(ambulance -> convertToDto(ambulance, AmbulanceDto.class))
+                .stream()
+                .map(ambulance -> new AmbulanceResponseDto(
+                        ambulance.getId().toString(),
+                        ambulance.getPlaca(),
+                        ambulance.getStatus().name(),
+                        ambulance.getDriver().getId().toString(),
+                        ambulance.getHealthAgent().getId().toString()
+                ))
                 .toList();
     }
 
@@ -55,6 +68,7 @@ public class AmbulanceService extends BaseService {
         Ambulance ambulance = convertToEntity(ambulanceDto, Ambulance.class);
 
         UUID uuid = stringToUuid(id);
+
         if (!ambulanceRepository.existsById(uuid)) {
             throw new RecordNotFoundException("Ambulância não encontrada");
         }
@@ -64,7 +78,8 @@ public class AmbulanceService extends BaseService {
     }
 
     public void delete(String id) {
-        Optional<Ambulance> ambulanceOptional = ambulanceRepository.findById(stringToUuid(id));
+        Optional<Ambulance> ambulanceOptional =
+                ambulanceRepository.findById(stringToUuid(id));
 
         if (ambulanceOptional.isEmpty()) {
             throw new RecordNotFoundException("Ambulância não encontrada");
@@ -76,12 +91,13 @@ public class AmbulanceService extends BaseService {
     @Override
     public <E, D> D convertToDto(E entity, Class<D> dClass) {
         Ambulance ambulance = (Ambulance) entity;
-        AmbulanceDto dto
-                = new AmbulanceDto(
-                        ambulance.getPlaca(),
-                        ambulance.getStatus().name(),
-                        String.valueOf(ambulance.getDriver().getId()),
-                        String.valueOf(ambulance.getHealthAgent().getId()));
+
+        AmbulanceDto dto = new AmbulanceDto(
+                ambulance.getPlaca(),
+                ambulance.getStatus().name(),
+                String.valueOf(ambulance.getDriver().getId()),
+                String.valueOf(ambulance.getHealthAgent().getId())
+        );
 
         return (D) dto;
     }
@@ -92,8 +108,13 @@ public class AmbulanceService extends BaseService {
 
         Ambulance ambulance = new Ambulance();
 
-        Driver driver = driverRepository.findById(UUID.fromString(ambulanceDto.driverId())).orElseThrow();
-        HealthAgent healthAgent = healthAgentRepository.findById(UUID.fromString(ambulanceDto.healthAgentId())).orElseThrow();
+        Driver driver = driverRepository
+                .findById(UUID.fromString(ambulanceDto.driverId()))
+                .orElseThrow();
+
+        HealthAgent healthAgent = healthAgentRepository
+                .findById(UUID.fromString(ambulanceDto.healthAgentId()))
+                .orElseThrow();
 
         ambulance.setPlaca(ambulanceDto.placa());
         ambulance.setStatus(AmbulanceStaus.valueOf(ambulanceDto.status()));

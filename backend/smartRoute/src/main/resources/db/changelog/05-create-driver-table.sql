@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS drivers (
     driver_licence_level VARCHAR(2) NOT NULL,
     CONSTRAINT pk_driver PRIMARY KEY (id),
     CONSTRAINT fk_driver_user FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT check_driver_licence_level CHECK (driver_license_level IN ('A', 'B', 'C', 'AB', 'BC', 'ABC'))
+    CONSTRAINT check_driver_licence_level CHECK (driver_licence_level IN ('A', 'B', 'C', 'AB', 'BC', 'ABC'))
 );
 
 ALTER TABLE IF EXISTS ambulance
