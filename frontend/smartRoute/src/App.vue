@@ -125,19 +125,27 @@ const close = () => {
 }
 
 onMounted( async () => {
-  const response = await apiClient.get('http://localhost:8080/users/session-attributes');
+  try {
+    const response = await apiClient.get('http://localhost:8080/users/session-attributes');
 
-  if (response.status != 200) {
-    await router.push('/login');
-  } else {
-    const data = await response.data;
-    store.setUser({
-      id: data.id,
-      nome: data.nome,
-      email: data.email
-    })
+    if (response.status != 200) {
+      await router.push('/login');
+      location.reload();
+      Toast.info('Sessão expirada. Por favor realize o login novamente')
+    } else {
+      const data = await response.data;
+      store.setUser({
+        id: data.id,
+        nome: data.nome,
+        email: data.email
+      })
+    }
+  } catch (error) {
+    if (location.href.split('/')[3] !== 'login') {
+      Toast.info('Sessão expirada. Por favor realize o login novamente')
+      await router.push('/login');
+    };
   }
-
 });
 
 </script>
