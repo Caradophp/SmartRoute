@@ -15,4 +15,6 @@ public interface EmergencyRepository extends JpaRepository<Emergency, UUID> {
 
     Set<Emergency> findByAppUserIdAndLatitudeAndLongitudeAndAttendedFalse(UUID userId, Double longitude, Double latitude);
 
+    List<Emergency> findTop10ByOrderByCreatedAtDesc();
+
 }

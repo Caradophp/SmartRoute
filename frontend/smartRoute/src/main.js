@@ -16,6 +16,8 @@ import Vulnerabilidades from './pages/Vulnerabilidades.vue'
 import HealthService from './pages/HealthService.vue'
 import RoutePlan from './pages/RoutePlan.vue'
 import { createPinia } from 'pinia'
+import FieldVisit from './pages/FieldVisit.vue'
+import AssitedPerson from './pages/AssitedPerson.vue'
 
 const routes = [
     {
@@ -78,6 +80,14 @@ const routes = [
         path: '/planos',
         component: RoutePlan,
     },
+    {
+        path: '/visitas',
+        component: FieldVisit
+    },
+    {
+        path: '/pessoas',
+        component: AssitedPerson
+    }
 ]
 
 export const router = createRouter({

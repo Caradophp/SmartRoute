@@ -31,4 +31,7 @@ public class FieldVisit extends com.faesa.smartRoute.model.Entity {
     @JoinColumn(name = "route_id", nullable = false)
     private RoutePlan routePlan;
 
+    @Column(name = "is_finished")
+    private Boolean isFinished;
+
 }

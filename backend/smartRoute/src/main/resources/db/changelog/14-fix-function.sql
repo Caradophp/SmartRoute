@@ -1,0 +1,33 @@
+-- Sufixo '_in' para indicar que é um valor de entrada (input)
+create or replace function func_register_assited_person(
+	nome_in varchar(255),
+	telefone_in varchar(11),
+	data_nascimento_in date,
+	rua_in varchar(255),
+	numero_in int,
+	bairro_in varchar(255),
+	cidade_in varchar(255),
+	territory_id uuid,
+	vulnerability_id uuid
+) returns varchar(50) language plpgsql as
+$$
+declare
+	address_id uuid;
+begin
+
+	if not exists (select 1 from territorio where id = territory_id) then
+		return jsonb_build_object('aviso', 'Território informado não cadastrado no sistema');
+	end if;
+
+	select id into address_id from address where numero = numero_in;
+
+	if address_id is null then
+		insert into address (id, rua, numero, bairro, cidade, id_territorio,created_at)
+		values (gen_random_uuid(), rua_in, numero_in, bairro_in, cidade_in, territory_id, current_timestamp) returning id into address_id;
+	end if;
+
+	insert into assisted_person (id, nome, telefone, data_nascimento, adress_id, vulnerability_id, created_at)
+	values (gen_random_uuid(), nome_in, telefone_in, data_nascimento_in, address_id, vulnerability_id, current_timestamp);
+	return jsonb_build_object('info', 'Operação realizada com sucesso');
+end
+$$

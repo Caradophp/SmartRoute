@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -41,6 +42,12 @@ public class EmergencyController {
         Set<AmbulanceDto> ambulanceDtos = emergencyService.checkIfIsNecessary(id, Double.parseDouble(longitude), Double.parseDouble(latitude));
 
         return ResponseEntity.ok(ambulanceDtos);
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<EmergencyDispachDto>> listLast10Emergencies() {
+        List<EmergencyDispachDto> last10Emergencies = emergencyService.findLast10Emergencies();
+        return ResponseEntity.ok(last10Emergencies);
     }
 
 }

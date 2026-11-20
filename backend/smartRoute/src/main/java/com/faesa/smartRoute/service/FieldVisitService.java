@@ -73,7 +73,7 @@ public class FieldVisitService extends BaseService {
 
         String format = fieldVisit.getDataVisita().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         FieldVisitResponseDto fieldVisitResponseDto
-                = new FieldVisitResponseDto(uuidToString(fieldVisit.getId()), format, fieldVisit.getObservacao());
+            = new FieldVisitResponseDto(uuidToString(fieldVisit.getId()), format, fieldVisit.getObservacao(), fieldVisit.getIsFinished() ? "Sim" : "Não");
 
         return (D) fieldVisitResponseDto;
     }

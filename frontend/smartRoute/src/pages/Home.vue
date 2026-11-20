@@ -1,7 +1,10 @@
 
 <script setup>
+import apiClient from '@/utils/Axios';
+import Toast from '@/utils/Toast';
 import { useUserStore } from '@/utils/User'
-import { computed, ref } from 'vue'
+import { FwbTable, FwbTableBody, FwbTableCell, FwbTableHead, FwbTableHeadCell, FwbTableRow } from 'flowbite-vue';
+import { computed, onMounted, ref } from 'vue'
 
 const store = useUserStore();
 
@@ -12,6 +15,51 @@ const saudacao = computed(() => {
   if (hora < 18) return 'Boa tarde'
   return 'Boa noite'
 })
+
+const emergencies = ref([]);
+const infos = ref({
+  ambulancies: 0,
+  healthAgents: 0,
+  territories: 0,
+  emergencies: 0
+})
+
+const loadLastIncidents = async () => {
+  try {
+    const response = await apiClient.get("http://localhost:8080/emergencias/listar")
+
+    if (!response.status == 200) {
+      Toast.error('Erro desconhecido. Contate o suporte técnico.');
+      return;
+    }
+
+    emergencies.value = await response.data;
+  } catch (error) {
+    Toast.danger(error);
+  }
+}
+
+const loadInfos = async () => {
+  try {
+    const response = await apiClient.get("http://localhost:8080/home")
+
+    if (!response.status == 200) {
+      Toast.error('Erro desconhecido. Contate o suporte técnico.');
+      return;
+    }
+
+    infos.value = await response.data;
+  } catch (error) {
+    Toast.danger(error);
+  }
+}
+
+
+onMounted(() => {
+  loadLastIncidents();
+  loadInfos();
+});
+
 </script>
 
 <template>
@@ -58,10 +106,9 @@ const saudacao = computed(() => {
       <div class="stat-icon blue">🚑</div>
       <div class="stat-info">
         <span class="stat-title">Ambulâncias</span>
-        <strong>—</strong>
+        <strong>{{ infos.ambulancies }}</strong>
       </div>
     </div>
-    <span class="stat-badge badge-blue">Aguardando dados</span>
   </article>
 
   <article class="stat-card stat-green">
@@ -69,10 +116,9 @@ const saudacao = computed(() => {
       <div class="stat-icon green">👥</div>
       <div class="stat-info">
         <span class="stat-title">Agentes de saúde</span>
-        <strong>—</strong>
+        <strong>{{ infos.healthAgents }}</strong>
       </div>
     </div>
-    <span class="stat-badge badge-green">Aguardando dados</span>
   </article>
 
   <article class="stat-card stat-purple">
@@ -80,10 +126,9 @@ const saudacao = computed(() => {
       <div class="stat-icon purple">📍</div>
       <div class="stat-info">
         <span class="stat-title">Áreas atendidas</span>
-        <strong>—</strong>
+        <strong>{{ infos.territories }}</strong>
       </div>
     </div>
-    <span class="stat-badge badge-purple">Aguardando dados</span>
   </article>
 
   <article class="stat-card stat-orange">
@@ -91,10 +136,9 @@ const saudacao = computed(() => {
       <div class="stat-icon orange">📋</div>
       <div class="stat-info">
         <span class="stat-title">Ocorrências</span>
-        <strong>—</strong>
+        <strong>{{ infos.emergencies }}</strong>
       </div>
     </div>
-    <span class="stat-badge badge-orange">Aguardando dados</span>
   </article>
 </section>
 
@@ -108,12 +152,22 @@ const saudacao = computed(() => {
       </div>
 
       <div class="empty-state">
-        <span>📋</span>
-        <h3>Nenhuma informação carregada</h3>
-        <p>
-          As ocorrências serão exibidas aqui quando
-          conectarmos o painel ao backend.
-        </p>
+        <FwbTable class="w-full" >
+          <FwbTableHead>
+            <FwbTableHeadCell>Usuário</FwbTableHeadCell>
+            <FwbTableHeadCell>Telefone</FwbTableHeadCell>
+            <FwbTableHeadCell class="last:text-right">Contato</FwbTableHeadCell>
+            <FwbTableHeadCell class="last:text-right">Local</FwbTableHeadCell>
+          </FwbTableHead>
+          <FwbTableBody v-for="value in emergencies">
+            <FwbTableRow>
+              <FwbTableCell >{{ value.username }}</FwbTableCell>
+              <FwbTableCell>{{ value.useremail }}</FwbTableCell>
+              <FwbTableCell>{{ value.userphonenumber }}</FwbTableCell>
+              <FwbTableCell>[ {{ value.latitude }}, {{ value.longitude }} ]</FwbTableCell>
+            </FwbTableRow>
+          </FwbTableBody>
+        </FwbTable>
       </div>
     </section>
   </main>
