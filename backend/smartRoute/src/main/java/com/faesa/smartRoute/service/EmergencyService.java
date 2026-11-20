@@ -89,4 +89,15 @@ public class EmergencyService {
         }
     }
 
+    public List<EmergencyDispachDto> findLast10Emergencies() {
+        return emergencyRepository.findTop10ByOrderByCreatedAtDesc()
+                .stream().map(e -> new EmergencyDispachDto(
+                        e.getLatitude(),
+                        e.getLongitude(),
+                        String.valueOf(e.getAppUser().getId()),
+                        e.getAppUser().getUsername(),
+                        e.getAppUser().getEmail(),
+                        e.getAppUser().getTelefone()
+                )).toList();
+    }
 }

@@ -16,7 +16,10 @@ const cadastros = [
   { nome: 'Motoristas', caminho: '/motoristas' },
   { nome: 'Unidades de Saúde', caminho: '/unidades' },
   { nome: 'Planos de Rota', caminho: '/planos' },
-  { nome: 'Perfis', caminho: '/papeis' }
+  { nome: 'Perfis', caminho: '/papeis' },
+  { nome: 'Visitas', caminho: '/visitas' },
+  { nome: 'Vulnerabilidades', caminho: '/vulnerabilidades' },
+  { nome: 'Pessoas Assistidas', caminho: '/pessoas' },
 ]
 
 

@@ -4,9 +4,11 @@ import com.faesa.smartRoute.dto.AssistedPersonDto;
 import com.faesa.smartRoute.exceptions.RecordNotFoundException;
 import com.faesa.smartRoute.model.Adress;
 import com.faesa.smartRoute.model.AssistedPerson;
+import com.faesa.smartRoute.model.Territory;
 import com.faesa.smartRoute.model.VulnerabilityType;
 import com.faesa.smartRoute.repository.AdressRepository;
 import com.faesa.smartRoute.repository.AssistedPersonRepository;
+import com.faesa.smartRoute.repository.TerritoryRepository;
 import com.faesa.smartRoute.repository.VulnerabilityTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class AssistedPersonService extends BaseService {
 
     @Autowired
     private VulnerabilityTypeRepository vulnerabilityTypeRepository;
+    @Autowired
+    private TerritoryRepository territoryRepository;
 
     public List<AssistedPersonDto> findAll() {
         return repository.findAll()
@@ -48,7 +52,7 @@ public class AssistedPersonService extends BaseService {
                 dto.rua(),
                 dto.numero(),
                 dto.bairro(),
-                dto.bairro(),
+                dto.cidade(),
                 stringToUuid(dto.idTerritorio()),
                 stringToUuid(dto.vulnerabilityId())
         );
@@ -62,6 +66,23 @@ public class AssistedPersonService extends BaseService {
         }
 
         AssistedPerson assistedPerson = convertToEntity(dto, AssistedPerson.class);
+        assistedPerson.setId(stringToUuid(id));
+
+        Adress adress = assistedPerson.getAdress();
+        adress.setRua(dto.rua());
+        adress.setNumero(dto.numero());
+        adress.setBairro(dto.bairro());
+        adress.setCidade(dto.cidade());
+
+        Optional<Territory> territoryOptional = territoryRepository.findById(stringToUuid(dto.idTerritorio()));
+
+        if (territoryOptional.isEmpty()) {
+            throw new RecordNotFoundException();
+        }
+
+        adress.setTerritorio(territoryOptional.get());
+
+        adressRepository.save(adress);
         repository.save(assistedPerson);
     }
 

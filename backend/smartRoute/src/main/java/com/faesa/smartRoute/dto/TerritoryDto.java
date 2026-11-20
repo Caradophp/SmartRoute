@@ -11,7 +11,7 @@ public record TerritoryDto(
 
         @NotBlank(message = "Nome do território deve ser informado")
         @Size(max = 60, message = "Nome do território deve ter no máximo 60 caracteres")
-        String nomeTerritorio,
+        String nome,
 
         @NotBlank(message = "Tipo do território deve ser informado")
         @Pattern(regexp = "URBAN|RURAL", message = "Tipo de território inválido")

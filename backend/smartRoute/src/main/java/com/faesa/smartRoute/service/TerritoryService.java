@@ -68,7 +68,7 @@ public class TerritoryService extends BaseService {
 
         Territory territory = new Territory();
         territory.setId(stringToUuid(territoryDto.id()));
-        territory.setNomeTerritorio(territoryDto.nomeTerritorio());
+        territory.setNomeTerritorio(territoryDto.nome());
         territory.setTipoTerritorio(TerritoryType.valueOf(territoryDto.type()));
 
         return (E) territory;
