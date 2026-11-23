@@ -14,6 +14,10 @@ import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
 
+/***
+ * Classe com métodos utilitérios usado para diversos motivos
+ * Exemplo: getCurrentUser() para obter o usuário logado
+ */
 @Component
 public class Util {
 

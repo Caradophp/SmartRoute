@@ -4,6 +4,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+/**
+ * Classe responsável por calcular a distancia entre dois pontos
+ * para definir qual é o mais próximo
+ */
 @Service
 public class DistanceCalculatorService {
 

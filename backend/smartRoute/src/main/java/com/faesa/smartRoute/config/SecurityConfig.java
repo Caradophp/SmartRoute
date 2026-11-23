@@ -26,6 +26,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Classe que configura a seguraça das aplicações
+ * Rotas privadas e públicas, além de configuração de encriptação
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

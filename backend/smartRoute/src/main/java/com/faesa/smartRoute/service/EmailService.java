@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Properties;
 
+/**
+ * Classe responsável por gerenciar o envio de emails da aplicação
+ */
 @Service
 @Log4j2
 public class EmailService {

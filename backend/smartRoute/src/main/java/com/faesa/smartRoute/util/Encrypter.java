@@ -3,6 +3,9 @@ package com.faesa.smartRoute.util;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Classe de encriptação
+ */
 @Component
 public class Encrypter {
 

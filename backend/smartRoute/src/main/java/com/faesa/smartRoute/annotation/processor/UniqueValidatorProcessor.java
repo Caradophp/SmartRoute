@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.regex.Pattern;
 
+/**
+ * Classe que faz o processamento da anotação @Unique
+ */
 public class UniqueValidatorProcessor implements ConstraintValidator<Unique, Object> {
 
     private final JdbcTemplate jdbcTemplate;

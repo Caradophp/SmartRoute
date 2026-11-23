@@ -27,6 +27,9 @@ import java.util.*;
 
 import static com.faesa.smartRoute.util.Util.getCurrentUser;
 
+/**
+ * Classe que gerencia todas as regras de negócio relacionadas ao usuário
+ */
 @Service
 public class UserService implements UserDetailsService, Aplicativo {
 

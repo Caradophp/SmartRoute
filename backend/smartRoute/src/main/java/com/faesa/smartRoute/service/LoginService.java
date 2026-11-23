@@ -26,6 +26,9 @@ import java.util.UUID;
 
 import static com.faesa.smartRoute.model.enums.UserStatus.*;
 
+/**
+ * Classe que engloba todas as regras de negócio do login da aplicação
+ */
 @Service
 public class LoginService {
 

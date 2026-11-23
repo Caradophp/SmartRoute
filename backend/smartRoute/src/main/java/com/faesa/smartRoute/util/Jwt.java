@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/***
+ * Classe responsável por gerenciar os token de acesso do JWT
+ */
 @Component
 public class Jwt {
 

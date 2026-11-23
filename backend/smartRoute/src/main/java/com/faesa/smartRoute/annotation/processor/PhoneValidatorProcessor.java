@@ -6,6 +6,9 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.regex.Pattern;
 
+/**
+ * Classe que faz o processamento da anotação @Phone
+ */
 public class PhoneValidatorProcessor implements ConstraintValidator<Phone, Object> {
     @Override
     public void initialize(Phone constraintAnnotation) {

@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe responsável por receber e tratar exceptipns que podem
+ * ocorrer durante a execução do programa
+ */
 @ControllerAdvice
 public class ExceptionHandler {
 

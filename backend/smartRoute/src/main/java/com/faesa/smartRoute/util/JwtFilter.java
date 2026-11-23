@@ -15,6 +15,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/***
+ * Filtro chamado a cada requisição que válida
+ * cada requisição para ver se usuário está autenticado
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 

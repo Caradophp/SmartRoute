@@ -10,6 +10,10 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Locale;
 
+/**
+ * Classe responsável por fazer o calculo da rota
+ * usando o RestClient para acessar a API do https://router.project-osrm.org
+ */
 @Service
 public class RoutingService {
 

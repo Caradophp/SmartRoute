@@ -4,6 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
+/**
+ * Classe que configura o RestClient para
+ * mandar requisições para https://router.project-osrm.org
+ */
 @Configuration
 public class RestClientConfig {
 

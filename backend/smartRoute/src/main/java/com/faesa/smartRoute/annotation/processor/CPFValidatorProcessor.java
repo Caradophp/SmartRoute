@@ -6,6 +6,9 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.regex.Pattern;
 
+/**
+ * Classe que faz o processamento da anotação @CPF
+ */
 public class CPFValidatorProcessor implements ConstraintValidator<CPF, Object> {
 
     @Override

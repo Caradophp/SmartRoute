@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Classe responsável por gerenciar as emergências do sistema,
+ * além de acionar as ambulâncias
+ */
 @Service
 public class EmergencyService {
 
