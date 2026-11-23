@@ -29,6 +29,8 @@ databaseChangeLog:
       file: db/changelog/13-create-vehicle-problem-column.sql
   - include:
       file: db/changelog/14-fix-function.sql
+  - include:
+      file: db/changelog/15-create-initial-user.sql
   - changeSet:
       id: 1
       author: nome

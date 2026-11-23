@@ -6,7 +6,7 @@ const nome = ref('');
 const tipo = ref('');
 
 const columns = [
-    { data: "nomeTerritorio", title: 'Nome'},
+    { data: "nome", title: 'Nome'},
     { data: "type", title: 'Tipo' }
 ];
 
@@ -21,12 +21,12 @@ const fields = [
 ];
 
 const jsonData = () => JSON.stringify({
-    nomeTerritorio: nome.value,
+    nome: nome.value,
     type: tipo.value
 });
 
 const setFormData = (data) => {
-    nome.value = data.nomeTerritorio,
+    nome.value = data.nome,
     tipo.value = data.type
 }
 

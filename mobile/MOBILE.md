@@ -147,7 +147,7 @@ Se o emulador aparecer como device, o ambiente está funcionando.
 Entre na pasta do app mobile:
 
 ```bash
-cd /home/luciano/faculdade/SmartRoute/mobile
+cd /home/luciano/faculdade/SmartRoute/mobile/SmartRouteMobile
 ```
 
 ## 9. Instalar dependências
@@ -254,7 +254,7 @@ npx expo start --clear
 Fluxo básico:
 
 ```bash
-cd /home/luciano/faculdade/SmartRoute/mobile/smartRoute
+cd /home/luciano/faculdade/SmartRoute/mobile/SmartRouteMobile
 npm install
 npx expo start --android
 ```

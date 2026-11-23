@@ -3,11 +3,11 @@
 import CrudLayout from '@/components/CrudLayout.vue'
 import { ref } from 'vue'
 
-const nomeTerritorio = ref('')
+const nome = ref('')
 const tipo = ref('')
 
 const columns = [
-  { data: 'nomeTerritorio', title: 'Nome do território' },
+  { data: 'nome', title: 'Nome do território' },
   {
     data: 'type',
     title: 'Tipo',
@@ -26,7 +26,7 @@ const fields = [
   {
     label: 'Nome do território',
     fieldType: 'text',
-    model: nomeTerritorio
+    model: nome
   },
   {
   label: 'Tipo',
@@ -40,12 +40,12 @@ const fields = [
 ]
 
 const jsonData = () => JSON.stringify({
-  nomeTerritorio: nomeTerritorio.value,
+  nome: nome.value,
   type: tipo.value
 })
 
 const setFormData = (data) => {
-  nomeTerritorio.value = data.nomeTerritorio
+  nome.value = data.nome
   tipo.value = data.type
 }
 </script>

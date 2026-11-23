@@ -1,0 +1,2 @@
+INSERT INTO users (id, nome, email, cpf, status, role_id, created_at)
+VALUES (gen_random_uuid(), 'admin', 'admin@admin.com', '11122233345', 'ACTIVE', 'e067f659-d536-43dd-a3c5-62951684b59c', CURRENT_TIMESTAMP)

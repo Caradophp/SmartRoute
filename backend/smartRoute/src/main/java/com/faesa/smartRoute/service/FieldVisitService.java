@@ -73,7 +73,7 @@ public class FieldVisitService extends BaseService {
 
         String format = fieldVisit.getDataVisita().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         FieldVisitResponseDto fieldVisitResponseDto
-            = new FieldVisitResponseDto(uuidToString(fieldVisit.getId()), format, fieldVisit.getObservacao(), fieldVisit.getIsFinished() ? "Sim" : "Não");
+            = new FieldVisitResponseDto(uuidToString(fieldVisit.getId()), format, fieldVisit.getObservacao(), (fieldVisit.getIsFinished() != null && fieldVisit.getIsFinished()) ? "Sim" : "Não");
 
         return (D) fieldVisitResponseDto;
     }
@@ -90,7 +90,8 @@ public class FieldVisitService extends BaseService {
         fieldVisit.setObservacao(fieldVisitRequestDto.observacao());
         fieldVisit.setAssistedPerson(assistedPerson);
         fieldVisit.setRoutePlan(routePlan);
+        fieldVisit.setIsFinished(Boolean.FALSE);
 
-        return (E) routePlan;
+        return (E) fieldVisit;
     }
 }
