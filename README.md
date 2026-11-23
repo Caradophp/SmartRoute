@@ -178,6 +178,9 @@ Encontrou algum problema durante a instalação ou execução do SmartRoute? Con
 
 ## 🚀 Sobre o SmartRoute
 
+Usuário para testes: admin@admin.com
+Senha para testes: 123
+
 Obrigado pelo interesse em contribuir com o **SmartRoute**!  
 Esperamos que este guia facilite a configuração e a execução do projeto.
 
